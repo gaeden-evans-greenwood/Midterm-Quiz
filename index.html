@@ -1,0 +1,1289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MIS Midterm Practice Quiz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EDF1F5; --paper:#FFFFFF; --ink:#13243A; --muted:#5A6B80; --rule:#D5DCE5;
+  --blue:#003A63; --blue-soft:#E3EDF6; --red:#B3122B; --red-soft:#FBE9EC;
+  --green:#1E6E45; --green-soft:#E5F3EB; --amber:#8A5A00; --amber-soft:#FFF3D9;
+  --focus:#2A7BD4;
+  --sans:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --serif:"Source Serif 4", Georgia, "Times New Roman", serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1726; --paper:#16233A; --ink:#E6ECF4; --muted:#9AAABF; --rule:#2C3D58;
+    --blue:#8EC1F0; --blue-soft:#1C3352; --red:#FF8A9A; --red-soft:#3A1B24;
+    --green:#7FD3A4; --green-soft:#16362A; --amber:#F2C26B; --amber-soft:#3A2E14; --focus:#8EC1F0;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1726; --paper:#16233A; --ink:#E6ECF4; --muted:#9AAABF; --rule:#2C3D58;
+  --blue:#8EC1F0; --blue-soft:#1C3352; --red:#FF8A9A; --red-soft:#3A1B24;
+  --green:#7FD3A4; --green-soft:#16362A; --amber:#F2C26B; --amber-soft:#3A2E14; --focus:#8EC1F0;
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{margin:0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.5}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 64px}
+
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  border-bottom:3px solid var(--blue);padding-bottom:12px;margin-bottom:20px}
+header.top h1{font-family:var(--serif);font-weight:600;font-size:1.6rem;margin:0;letter-spacing:-.01em}
+header.top .meta{color:var(--muted);font-size:.95rem}
+.timer{font-variant-numeric:tabular-nums}
+
+.layout{display:grid;grid-template-columns:220px 1fr;gap:24px;align-items:start}
+@media (max-width:760px){.layout{grid-template-columns:1fr}}
+
+aside.nav{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:14px;position:sticky;top:calc(12px + env(safe-area-inset-top,0px))}
+@media (max-width:760px){aside.nav{position:static}}
+aside.nav h2{font-size:.95rem;margin:0 0 10px;color:var(--muted);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.grid button{aspect-ratio:1;border:1px solid var(--rule);background:var(--paper);border-radius:4px;cursor:pointer;
+  font-variant-numeric:tabular-nums;font-size:.9rem;position:relative;padding:0}
+.grid button.answered{background:var(--blue-soft);border-color:var(--blue)}
+.grid button.current{outline:2px solid var(--blue);outline-offset:1px;font-weight:700}
+.grid button.flagged::after{content:"";position:absolute;top:2px;right:2px;width:7px;height:7px;border-radius:50%;background:var(--red)}
+.grid button.ok{background:var(--green-soft);border-color:var(--green)}
+.grid button.bad{background:var(--red-soft);border-color:var(--red)}
+.grid button.part{background:var(--amber-soft);border-color:var(--amber)}
+.legend{margin-top:12px;font-size:.82rem;color:var(--muted);line-height:1.6}
+.legend span{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:middle;border:1px solid var(--rule)}
+.navbtns{margin-top:14px;display:grid;gap:8px}
+
+.card{background:var(--paper);border:1px solid var(--rule);border-radius:6px;padding:22px 22px 18px}
+.qhead{display:flex;justify-content:space-between;gap:12px;align-items:baseline;border-bottom:1px solid var(--rule);padding-bottom:10px;margin-bottom:14px}
+.qhead .num{font-weight:700}
+.qhead .pts{color:var(--muted);font-size:.9rem}
+.prompt{font-family:var(--serif);font-size:1.12rem;line-height:1.6;max-width:68ch;margin:0 0 6px}
+.hint{color:var(--muted);font-size:.92rem;margin:0 0 14px}
+.opts{display:grid;gap:8px;margin:12px 0}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid var(--rule);border-radius:4px;cursor:pointer;max-width:72ch}
+.opt:hover{border-color:var(--blue)}
+.opt input{margin-top:5px;accent-color:var(--blue)}
+.opt.sel{border-color:var(--blue);background:var(--blue-soft)}
+.match{display:grid;gap:10px;margin:12px 0}
+.mrow{display:grid;grid-template-columns:1fr minmax(180px,240px);gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:4px}
+@media (max-width:560px){.mrow{grid-template-columns:1fr}}
+select{padding:8px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);width:100%}
+input[type=text].num{padding:10px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);width:160px}
+
+.extras{border-top:1px dashed var(--rule);margin-top:18px;padding-top:14px;display:grid;gap:12px}
+.conf{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.conf .lbl{font-size:.92rem;color:var(--muted);margin-right:4px}
+.pill{border:1px solid var(--rule);background:var(--paper);border-radius:999px;padding:6px 14px;cursor:pointer;font-size:.92rem}
+.pill[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+textarea{width:100%;min-height:64px;padding:10px;border:1px solid var(--rule);border-radius:4px;background:var(--paper);resize:vertical}
+label.small{font-size:.92rem;color:var(--muted);display:block;margin-bottom:4px}
+
+.btnrow{display:flex;justify-content:space-between;gap:10px;margin-top:18px;flex-wrap:wrap}
+.btn{border:1px solid var(--blue);background:var(--paper);color:var(--blue);border-radius:4px;padding:10px 18px;cursor:pointer;font-weight:700}
+.btn.primary{background:var(--blue);color:var(--paper)}
+.btn.ghost{border-color:var(--rule);color:var(--ink);font-weight:400}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+.result-hero{display:flex;gap:28px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.score{font-family:var(--serif);font-size:3.4rem;font-weight:600;line-height:1;color:var(--blue)}
+.score small{font-size:1.1rem;color:var(--muted);font-family:var(--sans);font-weight:400;display:block;margin-top:6px}
+.savestate{font-size:.92rem;color:var(--muted)}
+table.topics{width:100%;border-collapse:collapse;margin:16px 0;font-size:.95rem}
+table.topics th,table.topics td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--rule)}
+table.topics td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{height:8px;background:var(--rule);border-radius:4px;overflow:hidden;min-width:80px}
+.bar i{display:block;height:100%;background:var(--blue)}
+.callouts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0 4px}
+@media (max-width:560px){.callouts{grid-template-columns:1fr}}
+.callout{border:1px solid var(--rule);border-radius:6px;padding:12px}
+.callout h3{margin:0 0 4px;font-size:1rem}
+.callout p{margin:0;color:var(--muted);font-size:.92rem}
+
+.review{display:grid;gap:14px;margin-top:18px}
+.ritem{border:1px solid var(--rule);border-left-width:5px;border-radius:6px;padding:14px 16px;background:var(--paper)}
+.ritem.ok{border-left-color:var(--green)} .ritem.bad{border-left-color:var(--red)} .ritem.part{border-left-color:var(--amber)}
+.ritem h4{margin:0 0 6px;font-size:.95rem;display:flex;justify-content:space-between;gap:10px}
+.ritem .rp{font-family:var(--serif);margin:0 0 10px;max-width:70ch}
+.ans{font-size:.95rem;margin:4px 0}
+.ans b{display:inline-block;min-width:110px}
+.mark-ok{color:var(--green);font-weight:700}.mark-bad{color:var(--red);font-weight:700}
+.why{background:var(--blue-soft);border-radius:4px;padding:10px 12px;margin-top:10px;font-size:.95rem;max-width:72ch}
+.tag{font-size:.82rem;border:1px solid var(--rule);border-radius:999px;padding:2px 10px;color:var(--muted);white-space:nowrap}
+.history{margin-top:28px}
+.history h2{font-family:var(--serif);font-weight:600;font-size:1.25rem;margin:0 0 8px}
+.hrow{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--rule);align-items:center;flex-wrap:wrap}
+.notice{background:var(--amber-soft);border:1px solid var(--amber);border-radius:6px;padding:10px 14px;margin-bottom:16px;font-size:.95rem}
+.intro p{max-width:68ch}
+.intro ul{max-width:68ch;padding-left:20px}
+dialog{border:1px solid var(--rule);border-radius:8px;background:var(--paper);color:var(--ink);max-width:440px;width:calc(100% - 32px)}
+dialog::backdrop{background:rgba(10,20,35,.5)}
+@media (prefers-reduced-motion: no-preference){ .card{animation:none} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1>MIS Midterm Practice Quiz</h1>
+    <div class="meta"><span id="metaInfo"></span> <span class="timer" id="timer"></span></div>
+  </header>
+  <div id="app"></div>
+</div>
+
+<dialog id="confirmDlg">
+  <h3 style="margin-top:0">Submit your quiz?</h3>
+  <p id="confirmText"></p>
+  <div class="btnrow">
+    <button class="btn ghost" id="cancelSubmit">Keep working</button>
+    <button class="btn primary" id="doSubmit">Submit quiz</button>
+  </div>
+</dialog>
+
+<script>
+const Q1 = [
+{id:"q1",topic:"Four key drivers",type:"match",
+ prompt:"A campus coffee shop owner has four things in front of her. Match each one to the information age driver it represents.",
+ items:[
+  {t:"412 rows of receipts showing item, price, and timestamp",a:"Data"},
+  {t:"A report showing cold brew was her worst selling drink last month",a:"Information"},
+  {t:"A dashboard combining her sales history, local weather, and the class schedule, showing cold brew drops 40% on cold days",a:"Business intelligence"},
+  {t:"\"Cold days kill cold brew, so I'll order less stock when the forecast drops below 50 degrees.\"",a:"Knowledge"}],
+ choices:["Data","Information","Business intelligence","Knowledge"],
+ explain:"The order is Data → Information → Business Intelligence → Knowledge. Information answers one question from one source. BI pulls several sources together to reveal a pattern. Knowledge is a person using that pattern to decide what to do. The common trap is calling the dashboard \"knowledge\" because it looks smart. A dashboard can't decide anything; only a person can."},
+{id:"q2",topic:"Data vs. information",type:"multi",
+ prompt:"Which of these are information rather than data? Select all that apply.",
+ options:["47","Customer ID 10293","Our best customer spent $4,200 with us this year","March was our slowest month for hoodie sales","3/14/2026","Product 88412 had zero returns, the lowest of any product we sell"],
+ answers:[2,3,5],
+ explain:"Data is a raw fact with no meaning attached: a number, an ID, a date. Information is data processed so it answers a business question like \"who is my best customer?\" or \"what's my worst seller?\" A test: if you'd have to ask \"so what?\", it's still data."},
+{id:"q3",topic:"Departments and their data",type:"match",
+ prompt:"Match each piece of data to the department that owns it, according to the study guide.",
+ items:[
+  {t:"Commission data",a:"Sales"},
+  {t:"Campaign tracking",a:"Marketing"},
+  {t:"Salaries and benefits",a:"Human resources"},
+  {t:"Cash flow and budgets",a:"Finance"},
+  {t:"Inventory levels",a:"Operations management"},
+  {t:"Customer acquisition metrics",a:"Marketing"}],
+ choices:["Finance","Human resources","Sales","Marketing","Operations management"],
+ explain:"The traps here: commission data feels like it belongs to HR or Finance because it's pay, but your guide lists it under Sales. Customer acquisition metrics feel like Sales because they're about customers, but the guide puts them under Marketing. Marketing gets the customer in the door; Sales closes and tracks the deal."},
+{id:"q4",topic:"Porter's Five Forces",type:"match",
+ prompt:"Match each situation to the force it describes.",
+ items:[
+  {t:"Anyone with $5,000 and a food truck can start selling tacos next to you",a:"Threat of new entrants"},
+  {t:"Only one company in the world makes the chip your product needs",a:"Supplier power"},
+  {t:"Customers can switch to a competitor's app for free in seconds",a:"Buyer power"},
+  {t:"People skip the movie theater and stream at home instead",a:"Threat of substitutes"},
+  {t:"Kroger, Safeway, and Albertson's run nearly identical weekly sales ads",a:"Rivalry among existing competitors"}],
+ choices:["Buyer power","Supplier power","Threat of new entrants","Threat of substitutes","Rivalry among existing competitors"],
+ explain:"Substitutes vs. new entrants trips people up. A new entrant sells the SAME kind of product (another taco truck). A substitute solves the same need in a DIFFERENT way (streaming instead of a theater). Buyer power vs. rivalry: buyer power is about how easily customers can walk; rivalry is about how hard competitors fight each other."},
+{id:"q5",topic:"Systems thinking and feedback",type:"mc",
+ prompt:"A restaurant has slow service, so the owner hires two more cooks. Tables still wait just as long, because the host seats everyone at once and orders flood the kitchen in waves. The owner only looked at the kitchen. Which concept did she ignore?",
+ options:["Feedback loop","Systems thinking","Product differentiation","Efficiency"],answer:1,
+ explain:"Systems thinking means watching the WHOLE system, not one isolated piece. She fixed one part (kitchen) without seeing how another part (seating) was causing the problem. A feedback loop is a tempting answer, but feedback is about using output to adjust future actions, which she hasn't done yet."},
+{id:"q6",topic:"Role of MIS",type:"mc",
+ prompt:"Two rival companies buy the exact same management information system on the same day. A year later, one is thriving and one is struggling. Based on the study guide, what's the most likely explanation?",
+ options:["One company paid for a more expensive license","The thriving company has people who know how to manage and use the system","The struggling company had higher supplier power","The struggling company used it only for back office processes"],answer:1,
+ explain:"The guide says MIS is a valuable tool that leverages the talents of PEOPLE who know how to manage and use it. Same tool, different people, different results. Technology alone doesn't create success."},
+{id:"q7",topic:"Generic strategies",type:"match",
+ prompt:"Match each airline to its strategy.",
+ items:[
+  {t:"Southwest",a:"Cost leadership"},
+  {t:"Singapore Airlines",a:"Differentiation"},
+  {t:"Sky Taxi, a rent by the hour personal plane",a:"Focused strategy"},
+  {t:"JetBlue",a:"Cost leadership"},
+  {t:"Virgin Atlantic",a:"Differentiation"}],
+ choices:["Cost leadership","Differentiation","Focused strategy"],
+ explain:"Cost leadership airlines (Southwest, Horizon, Frontier, JetBlue) compete on cheap fares for a broad market. Differentiation airlines (British Airways, Singapore, Virgin Atlantic) compete on luxury and brand for a broad market. Sky Taxi is focused because it targets a tiny niche. Sky Taxi is expensive, but being expensive doesn't make it differentiation. What makes it focused is the narrow market."},
+{id:"q8",topic:"Value chain",type:"mc",
+ prompt:"A company maps its value chain. Which of these is NOT a valid decision the value chain approach supports?",
+ options:["Invest more in a high value activity like customer support","Improve a low value activity like slow invoicing","Eliminate a low value activity entirely","Leave every activity exactly as it is so customers aren't disrupted"],answer:3,
+ explain:"The value chain approach says firms can enhance high value activities, improve or eliminate low value ones, or do a mix of all of these. That's why \"All of the answers are correct\" was the answer on the review. Doing nothing isn't a value chain strategy; the whole point is to change something."},
+{id:"q9",topic:"Front office vs. back office",type:"match",
+ prompt:"Sort each process: is it customer facing (front office) or business facing (back office)?",
+ items:[
+  {t:"Hotel reservations",a:"Customer facing"},
+  {t:"Tracking employee vacation time",a:"Business facing"},
+  {t:"Billing",a:"Customer facing"},
+  {t:"Accounts receivable",a:"Business facing"},
+  {t:"Insurance claim processing",a:"Customer facing"},
+  {t:"Production schedules",a:"Business facing"}],
+ choices:["Customer facing","Business facing"],
+ explain:"The trap is billing vs. accounts receivable. They're both about money owed, but your guide lists billing as customer facing (the customer receives and experiences the bill) and accounts receivable as back office (the internal accounting record of who owes what). Ask: does the customer directly experience this?"},
+{id:"q10",topic:"Executive roles",type:"match",
+ prompt:"Match each task to the executive responsible for it.",
+ items:[
+  {t:"Makes sure the new ERP project actually supports the company's growth plan",a:"CIO"},
+  {t:"Makes sure systems run fast, accurately, and stay up",a:"CTO"},
+  {t:"Leads the response to a phishing attack",a:"CSO"},
+  {t:"Writes the policy on how customer data can legally and ethically be shared",a:"CPO"}],
+ choices:["CIO","CTO","CSO","CPO"],
+ explain:"CIO = alignment (MIS matches business goals). CTO = technology works: speed, accuracy, reliability. CSO = security, cyber threats. CPO = privacy and the legal/ethical use of information. The CSO vs. CPO mixup is common: the CSO keeps attackers out; the CPO decides what the company itself is allowed to do with your data."},
+{id:"q11",topic:"Metrics",type:"number",
+ prompt:"A sneaker brand has $4.5 million in sales. Total sales for the entire sneaker industry are $60 million. What is the brand's market share? Enter a percent.",
+ answer:7.5,tol:0.05,unit:"%",
+ explain:"Market share = firm's sales ÷ total industry sales. $4.5M ÷ $60M = 0.075 = 7.5%. The common mistake is flipping it ($60M ÷ $4.5M = 13.3), which would mean you own more than the whole market."},
+{id:"q12",topic:"Security and threats",type:"match",
+ prompt:"Match each description to the right term.",
+ items:[
+  {t:"Breaks into systems on purpose, with permission, to find and plug holes",a:"White hat hacker"},
+  {t:"Encrypts your personal files and demands payment to unlock them",a:"Ransomware like Simplelocker"},
+  {t:"Looks like a useful program but hides malicious code inside",a:"Trojan horse"},
+  {t:"Spreads across a network on its own without you opening anything",a:"Worm"},
+  {t:"Breaks into systems to steal or cause damage",a:"Black hat hacker"}],
+ choices:["White hat hacker","Black hat hacker","Script kiddie","Virus","Worm","Trojan horse","Ransomware like Simplelocker"],
+ explain:"Virus vs. worm: a virus needs you to run or open something to spread; a worm spreads by itself. Trojan horse is named after the wooden horse: it looks like a gift but hides an attack. White hat = ethical hacker on your side. Script kiddies use ready made attack tools without real skill."},
+{id:"q13",topic:"Four key drivers",type:"mc",
+ prompt:"A manager says: \"Our BI tool shows sales dip every January, so I know to cut staff hours that month.\" Which part of that sentence is KNOWLEDGE rather than business intelligence?",
+ options:["\"Our BI tool\"","\"sales dip every January\"","\"I know to cut staff hours that month\"","None of it. The whole sentence is information."],answer:2,
+ explain:"\"Sales dip every January\" is the pattern BI found. Knowledge is the human step: taking that pattern and turning it into a decision or action. If you picked the dip, you're mixing up the pattern with what you do about it."},
+{id:"q14",topic:"Data vs. information",type:"mc",
+ prompt:"Your boss asks, \"Who are our best customers?\" You have a database of every customer ID and every purchase. What has to happen before you can answer?",
+ options:["Nothing. The customer IDs already answer the question.","The purchase data has to be processed, like totaling spend per customer and ranking them, so it has meaning.","The data has to go to the CTO for approval.","Nothing. This is a knowledge question, so data can't help."],answer:1,
+ explain:"Raw data sits there until someone processes, structures, or adds context to it. Totaling and ranking turns it into information that answers the question. \"Who are my best customers?\" is literally the example your guide uses for information."},
+{id:"q15",topic:"Departments and their data",type:"mc",
+ prompt:"The sales team keeps promising delivery dates the company can't meet. Based on how departments rely on each other, which department's data are they most likely not checking?",
+ options:["Finance","Human resources","Operations management","Marketing"],answer:2,
+ explain:"Your guide's example: sales relies on operations for inventory data, order tracking, and demand forecasts. Delivery promises depend on what's in stock and what's being made. That's operations."},
+{id:"q16",topic:"Systems thinking and feedback",type:"mc",
+ prompt:"A professor teaches a lesson, gives a quiz, sees that half the class missed question 4, and reteaches that topic the next class. Which part is the feedback?",
+ options:["The lesson being taught","The professor grading the quizzes","The question 4 results being used to change the next lesson","The quiz itself"],answer:2,
+ explain:"The process is Input → Transform → Output. Feedback is information from the output that loops BACK to adjust future actions. Grading creates the output; the feedback is using it to change what happens next."},
+{id:"q17",topic:"Role of MIS",type:"mc",
+ prompt:"Which sentence best describes the role of MIS according to the study guide?",
+ options:["MIS replaces the need for skilled managers by automating decisions","MIS is a tool that leverages people's talents to drive business success and innovation","MIS is mainly about protecting data from hackers","MIS is the physical hardware a company owns"],answer:1,
+ explain:"Option A is the trap: it sounds modern, but it says the opposite of the guide. MIS doesn't replace people; it makes skilled people more effective. Security is one piece of MIS, not its purpose."},
+{id:"q18",topic:"Porter's Five Forces",type:"mc",
+ prompt:"A record label notices Walmart, Target, and iTunes are demanding lower wholesale prices. A classmate says, \"That's the threat of substitutes.\" What's wrong with that?",
+ options:["Nothing. It is the threat of substitutes.","It's buyer power. These are the label's buyers, and they're using their size to push prices down.","It's supplier power. Walmart supplies the music to customers.","It's rivalry. Walmart and Target are competing with each other."],answer:1,
+ explain:"Walmart, Target, and iTunes BUY music from the label to sell it, so they're buyers with bargaining power. Substitutes for a record label would be things competing for the same leisure time, like Xbox or Facebook. Option C is a trap: they deliver music to consumers, but from the label's point of view they're the buyer."},
+{id:"q19",topic:"Generic strategies",type:"multi",
+ prompt:"Which statements are correct? Select all that apply.",
+ options:["Focused vs. broad strategy is about niche market vs. large market","Focused vs. broad strategy is about low cost vs. high quality","Amazon tailoring recommendations to your buying habits is product differentiation","Once a company secures a competitive advantage, it can stop updating its strategy","Sky Taxi uses cost leadership because it charges by the hour"],
+ answers:[0,2],
+ explain:"Broad vs. focused is about MARKET SIZE. Cost vs. differentiation is the other dimension, which is why B is a trap. Companies keep updating strategy because their environment keeps changing. Sky Taxi is focused because its market is a narrow niche."},
+{id:"q20",topic:"Value chain",type:"match",
+ prompt:"Match each activity to the department that handles it.",
+ items:[
+  {t:"Promoting discounts",a:"Marketing and sales"},
+  {t:"Ordering inventory",a:"Operations management"},
+  {t:"Paying a supplier's invoice (accounts payable)",a:"Accounting and finance"},
+  {t:"Tracking employee sick days",a:"Human resources"}],
+ choices:["Marketing and sales","Operations management","Accounting and finance","Human resources"],
+ explain:"Ordering inventory is the one people miss. It feels like a purchasing or finance task, but it's an operations function because it keeps production and supply running. Paying for it afterward is accounting."},
+{id:"q21",topic:"Front office vs. back office",type:"mc",
+ prompt:"A bank customer applies for a loan online. Behind the scenes, HR approves overtime for the loan officer who reviews it. Which statement is correct?",
+ options:["Both are customer facing because both involve the loan","Loan processing is customer facing; approving overtime is business facing","Both are business facing because neither happens in a branch","Loan processing is business facing because the customer can't see the review"],answer:1,
+ explain:"Customer facing doesn't mean face to face. Loan processing is a workflow the customer directly experiences, and your guide lists it as front office. HR approving overtime is internal support that keeps the bank running. Option D is the trap: just because part of it is hidden doesn't make the whole process back office."},
+{id:"q22",topic:"Executive roles",type:"mc",
+ prompt:"A company is deciding which warehouse jobs robots should take over. Which executive role is this?",
+ options:["Chief Technology Officer","Chief Automation Officer","Chief User Experience Officer","Chief Information Officer"],answer:1,
+ explain:"The Chief Automation Officer evaluates where automation and robotics can replace people or processes. The CTO is the tempting wrong answer since robots are technology, but the CTO's job is speed, accuracy, and reliability of existing tech."},
+{id:"q23",topic:"Metrics",type:"mc",
+ prompt:"A call center answers calls in 30 seconds on average using half the staff of competitors. But complaints are rising because customers' problems aren't getting solved. Where does it land?",
+ options:["High efficiency, high effectiveness","High efficiency, low effectiveness","Low efficiency, high effectiveness","Low efficiency, low effectiveness"],answer:1,
+ explain:"Efficiency = using resources well (fast, few staff). Effectiveness = actually achieving the goal (solving problems). They're doing things right, but not doing the right things. The goal is the upper right corner: both high."},
+{id:"q24",topic:"Metrics",type:"mc",
+ prompt:"Which pair is labeled correctly?",
+ options:["CSF: \"Deliver orders fast\"   KPI: \"Percent of orders delivered within 2 days\"","CSF: \"Percent of orders delivered within 2 days\"   KPI: \"Deliver orders fast\"","CSF: \"Average delivery time\"   KPI: \"Customer delivery speed\"","Both are the same thing, so any pairing works"],answer:0,
+ explain:"A CSF is the big strategic thing you must get right. A KPI is the number that measures how you're doing on it. Memory hook: if you can put a number on it, it's the KPI."},
+{id:"q25",topic:"Security and threats",type:"multi",
+ prompt:"The university's online portal goes down for two days. Which costs of downtime does the study guide say this can cause? Select all that apply.",
+ options:["Lost revenue","Damaged reputation","Legal expenses","Operational recovery costs","Higher supplier power","Lower market share for competitors"],
+ answers:[0,1,2,3],
+ explain:"The guide's point is that downtime costs go BEYOND lost revenue: reputation, legal expenses, and recovery costs pile up too. The last two sound businessy but have nothing to do with downtime."}
+];
+
+
+const Q2 = [
+{id:"v2q1",topic:"Four key drivers",type:"mc",
+ prompt:"A gym's app combines check in times, weather history, and class signups, and shows that spin class attendance drops 30% when it rains. Nobody has acted on it yet. Which driver is this?",
+ options:["Information","Business intelligence","Knowledge, because it's a useful business pattern","Data"],answer:1,
+ explain:"This is a pattern pulled from several sources at once, which is business intelligence. It isn't knowledge yet, because no person has turned it into a judgment or action. Being useful to the business doesn't make something knowledge. Knowledge is the human step that comes after."},
+{id:"v2q2",topic:"Porter's Five Forces",type:"mc",
+ prompt:"Nike buys rubber from a few suppliers and sells its shoes to Foot Locker, which sells them to shoppers. From NIKE's point of view, Foot Locker demanding a bigger discount on every order is an example of:",
+ options:["Supplier power, because Foot Locker supplies shoes to shoppers","Buyer power","Rivalry among existing competitors","Threat of substitutes"],answer:1,
+ explain:"Always stand in the shoes of the company the question names. Foot Locker BUYS from Nike, so to Nike it's a buyer. It doesn't matter that Foot Locker supplies shoes to shoppers further down the line. That's the same trap as Walmart and the record label on Quiz 1."},
+{id:"v2q3",topic:"Systems thinking and feedback",type:"mc",
+ prompt:"A grocery store's checkout lines are long. The manager times every cashier and finds they're all fast. The real cause turns out to be the stock room restocking shelves during the lunch rush, which blocks the aisles. In MIS terms, what did the manager fail to do?",
+ options:["Measure efficiency, since the store clearly isn't efficient","Use systems thinking by looking at how all the parts interact, not just the cashiers","Build a feedback loop","Account for buyer power"],answer:1,
+ explain:"The store IS inefficient, which is why option A is tempting. But the question asks what the manager failed to DO. He studied one isolated piece and missed how another part of the system caused the problem. Watching the whole system is systems thinking. Efficiency is a measurement, not a way of looking."},
+{id:"v2q4",topic:"Front office vs. back office",type:"match",
+ prompt:"Sort each process into customer facing (front office) or business facing (back office).",
+ items:[
+  {t:"Insurance claim processing",a:"Customer facing"},
+  {t:"Enrolling employees in health benefits",a:"Business facing"},
+  {t:"Sending a customer their monthly bill",a:"Customer facing"},
+  {t:"Recording that a customer still owes $300 (accounts receivable)",a:"Business facing"},
+  {t:"Order processing",a:"Customer facing"},
+  {t:"Paying the company's own suppliers (accounts payable)",a:"Business facing"}],
+ choices:["Customer facing","Business facing"],
+ explain:"A process is customer facing when it directly serves the customer and they experience its result, even if they can't watch every step. A claim being processed or a bill arriving is something the customer lives through. Accounts receivable is the company's internal record of the same money, so it's back office."},
+{id:"v2q5",topic:"Security and threats",type:"match",
+ prompt:"Match each situation to the right term.",
+ items:[
+  {t:"You open an email attachment, it infects your laptop, then infects files you share with others",a:"Virus"},
+  {t:"A free \"PDF converter\" you download secretly gives a hacker access to your computer",a:"Trojan horse"},
+  {t:"Malware moves from computer to computer across the office network overnight while nobody clicks anything",a:"Worm"},
+  {t:"A teenager runs a downloaded attack tool he doesn't really understand",a:"Script kiddie"},
+  {t:"Your photos get locked and a message demands payment to unlock them",a:"Ransomware like Simplelocker"}],
+ choices:["Virus","Worm","Trojan horse","Script kiddie","White hat hacker","Black hat hacker","Ransomware like Simplelocker"],
+ explain:"Trojan horse = disguise. It pretends to be something useful so you let it in. Virus = attaches to files and spreads when they're opened or shared. Worm = spreads on its own with no human action. On Quiz 1 you called the disguised program a virus. The key word to watch for is anything that \"looks like\" or \"pretends to be\" useful."},
+{id:"v2q6",topic:"Departments and their data",type:"mc",
+ prompt:"A company spends $40 in advertising for every new customer it signs up. Which department's data is this?",
+ options:["Sales, because it's about customers","Marketing","Finance, because it's measured in dollars","Operations management"],answer:1,
+ explain:"This is a customer acquisition metric, which your guide puts under Marketing. Two traps: it mentions customers (pulls you to Sales) and it's in dollars (pulls you to Finance). Marketing gets people in the door; Sales handles customers once they're buying."},
+{id:"v2q7",topic:"Generic strategies",type:"mc",
+ prompt:"A classmate labels JetBlue as a differentiation strategy because it offers free WiFi and snacks. Based on the study guide, is that right?",
+ options:["Yes. Perks like free WiFi and snacks set JetBlue apart from other airlines, which is what differentiation means.","No. The guide groups JetBlue with Southwest and Frontier as low cost airlines, because it mainly competes on price.","No. JetBlue is a focused strategy.","Yes, because JetBlue costs more than the cheapest airlines."],answer:1,
+ explain:"A strategy is defined by what a company MAINLY competes on, not by any single perk. JetBlue, Southwest, Horizon, and Frontier compete on low fares. British Airways, Singapore, and Virgin Atlantic compete on luxury and brand. On Quiz 1 you guessed from the names. For the exam, the guide's lists are what count."},
+{id:"v2q8",topic:"Four key drivers",type:"mc",
+ prompt:"A classmate says: \"Anything that helps a business make a decision is business intelligence, so when a manager decides something, that decision is BI.\" What's wrong with this?",
+ options:["Nothing. That's the definition of BI.","BI provides the pattern. A person using that pattern to decide or act is knowledge.","Decisions are information, because they answer a business question.","Decisions are data, because they get recorded in the system."],answer:1,
+ explain:"This was your reasoning on Quiz 1, Q1, when you were sure the decision was BI. The order is Data → Information → BI → Knowledge, and each step adds something. BI adds the pattern across sources. Knowledge adds human judgment and action. The decision is always the last step."},
+{id:"v2q9",topic:"Metrics",type:"number",
+ prompt:"A firm has a 12% market share and $9 million in sales. What are total sales for the whole industry, in millions?",
+ answer:75,tol:0.05,unit:"million",
+ explain:"Market share = firm sales ÷ industry sales. So 0.12 = 9 ÷ industry, which means industry = 9 ÷ 0.12 = $75 million. Same formula as before, just solved backward."},
+{id:"v2q10",topic:"Front office vs. back office",type:"mc",
+ prompt:"Your study partner's rule is: \"If the customer can't see it happening, it's back office.\" Which process breaks that rule?",
+ options:["Insurance claim processing","Tracking employee sick time","Production schedules","Accounts payable"],answer:0,
+ explain:"Customers can't watch their claim being reviewed, but claim processing is still customer facing, because it directly serves them and they experience the result. The other three really are back office. This rule is the one that cost you points on Quiz 1, Q9."},
+{id:"v2q11",topic:"Systems thinking and feedback",type:"match",
+ prompt:"A bakery runs this process. Match each step to its part of the system.",
+ items:[
+  {t:"Flour, butter, and eggs arrive",a:"Input"},
+  {t:"Dough is mixed and baked",a:"Transform"},
+  {t:"Croissants go on the shelf",a:"Output"},
+  {t:"Reviews say they're too salty, so the baker uses less salt next batch",a:"Feedback"}],
+ choices:["Input","Transform","Output","Feedback"],
+ explain:"Input → Transform → Output is the basic process. Feedback is information from the output that loops back to change what happens next. The reviews alone are just output information. They become feedback when they're used to adjust the next batch."},
+{id:"v2q12",topic:"Generic strategies",type:"mc",
+ prompt:"A company has the lowest prices in its industry and a clear competitive advantage. Leadership decides to lock that strategy in permanently. What does the study guide say?",
+ options:["Smart. Once a company earns a competitive advantage, changing strategy only risks losing what it built.","Risky. Market environments change rapidly, so companies continuously update their strategies.","Fine, as long as the strategy is focused.","Fine, because customers who come for low prices will keep coming back no matter what competitors do."],answer:1,
+ explain:"On Quiz 1 you wondered if a company with an advantage is fine where it is. The guide says no: companies keep updating strategy because their internal and external environments change rapidly. Today's advantage can disappear when a new entrant or substitute shows up."},
+{id:"v2q13",topic:"Porter's Five Forces",type:"match",
+ prompt:"You run a record label. Match each situation to the force it represents for YOUR company.",
+ items:[
+  {t:"Spotify demands a lower payment per stream",a:"Buyer power"},
+  {t:"TikTok and YouTube eat into how much time people spend listening to music",a:"Threat of substitutes"},
+  {t:"The only plant in the region that can press vinyl raises its prices",a:"Supplier power"},
+  {t:"Cheap AI tools let anyone release professional sounding music",a:"Threat of new entrants"},
+  {t:"Other labels bid against you for the same hot artists",a:"Rivalry among existing competitors"}],
+ choices:["Buyer power","Supplier power","Threat of new entrants","Threat of substitutes","Rivalry among existing competitors"],
+ explain:"Spotify distributes music to listeners, but it BUYS from the label, so it's a buyer. TikTok isn't another label; it competes for the same free time in a different way, so it's a substitute. New entrants make the same kind of product (music). Substitutes meet the same need differently."},
+{id:"v2q14",topic:"Security and threats",type:"mc",
+ prompt:"A virus and a Trojan horse can both require you to do something before they cause harm. What's the real difference?",
+ options:["A Trojan horse disguises itself as something useful; a virus attaches to files and spreads when they're opened or shared.","A virus spreads across networks on its own, while a Trojan horse needs you to open an attachment.","A Trojan horse always encrypts your files.","There's no real difference; they're two names for the same thing."],answer:0,
+ explain:"Option B describes a worm, not a virus. Option C describes ransomware. The Trojan horse is defined by its disguise, like the wooden horse that looked like a gift."},
+{id:"v2q15",topic:"Data vs. information",type:"mc",
+ prompt:"A cell in a spreadsheet says \"72.\" A report says \"72 orders shipped late this week, double last week.\" What turned the first into the second?",
+ options:["The number got bigger","Context and comparison were added, so it now answers a business question","It was saved into a database","Someone looked at it"],answer:1,
+ explain:"Same number, different meaning. Data becomes information when it's processed, structured, or given context so it answers a question, like \"are we getting worse at shipping?\""},
+{id:"v2q16",topic:"Systems thinking and feedback",type:"mc",
+ prompt:"Which statement correctly separates systems thinking from efficiency?",
+ options:["Efficiency asks whether resources are used well; systems thinking asks whether you're looking at all the interacting parts.","They mean the same thing.","Systems thinking is about doing things fast; efficiency is about doing the right things.","Efficiency looks at the whole system; systems thinking looks at one part."],answer:0,
+ explain:"Option C is a double trap: \"doing the right things\" is effectiveness, not systems thinking. Efficiency = resources. Effectiveness = goals. Systems thinking = seeing the whole system instead of isolated pieces."},
+{id:"v2q17",topic:"Departments and their data",type:"match",
+ prompt:"Match each piece of data to its department.",
+ items:[
+  {t:"Number of people who clicked an Instagram ad",a:"Marketing"},
+  {t:"How much each sales rep earned in commission",a:"Sales"},
+  {t:"A list of customers and what each one bought",a:"Sales"},
+  {t:"Next quarter's budget",a:"Finance"},
+  {t:"How raw materials are turned into finished goods",a:"Operations management"}],
+ choices:["Finance","Human resources","Sales","Marketing","Operations management"],
+ explain:"Commission feels like HR because it's pay, but the guide puts commission data under Sales. Customer and sales report data are also Sales. Ad clicks are promotional data, which is Marketing."},
+{id:"v2q18",topic:"Four key drivers",type:"match",
+ prompt:"A gym manager has these in front of her. Match each to its driver.",
+ items:[
+  {t:"A table of every member's check in time",a:"Data"},
+  {t:"Spin was the least attended class in March",a:"Information"},
+  {t:"A report combining three years of weather, attendance, and signups shows rain cuts spin attendance",a:"Business intelligence"},
+  {t:"She moves spin to the smaller studio on rainy days",a:"Knowledge"},
+  {t:"A trainer with ten years at the gym can tell from the parking lot how full spin will be",a:"Knowledge"}],
+ choices:["Data","Information","Business intelligence","Knowledge"],
+ explain:"No \"I know\" wording to lean on this time. The decision to move the class and the trainer's experience based judgment are both knowledge: a person applying what they've learned. The combined report is BI because it pulls several sources into a pattern. \"Least attended in March\" is information because it answers one question from one source."},
+{id:"v2q19",topic:"Value chain",type:"mc",
+ prompt:"A company finds that its packaging step costs a lot but adds little value customers care about. What does the value chain approach allow?",
+ options:["Improve it","Eliminate it","Either one; improving or eliminating low value activities are both valid","Neither; only high value activities can be changed"],answer:2,
+ explain:"Firms can enhance high value activities, improve or eliminate low value ones, or combine those moves."},
+{id:"v2q20",topic:"Porter's Five Forces",type:"mc",
+ prompt:"Now flip the Nike example. From FOOT LOCKER's point of view, Nike raising its wholesale prices is an example of:",
+ options:["Buyer power","Supplier power","Threat of new entrants","Rivalry among existing competitors"],answer:1,
+ explain:"Same relationship, opposite side. To Nike, Foot Locker is a buyer. To Foot Locker, Nike is a supplier. The force depends entirely on whose point of view the question takes."},
+{id:"v2q21",topic:"Executive roles",type:"mc",
+ prompt:"A company wants customers to find its app easier and more enjoyable to use. Which emerging role focuses on that?",
+ options:["Chief Technology Officer","Chief Automation Officer","Chief User Experience Officer","Chief Privacy Officer"],answer:2,
+ explain:"The Chief User Experience Officer optimizes the relationship between users and technology. The CTO is about speed, accuracy, and reliability, which is different from whether people enjoy using it."},
+{id:"v2q22",topic:"Security and threats",type:"mc",
+ prompt:"A company's website goes down for one day. The CFO says, \"We lost $50,000 in sales. That's the full cost.\" What's she missing?",
+ options:["Nothing. Lost sales is the whole cost.","Damaged reputation, legal expenses, and the cost of recovering operations","Higher supplier power","A drop in market share for the whole industry"],answer:1,
+ explain:"Your guide's point: downtime costs go beyond immediate lost revenue. Reputation, legal expenses, and recovery costs add up on top of it."},
+{id:"v2q23",topic:"Role of MIS",type:"mc",
+ prompt:"A CEO says, \"We just bought the best system on the market, so we can skip training.\" Based on the study guide, what's the problem?",
+ options:["None. Better technology means better results on its own.","MIS creates value only when people know how to manage and use it effectively.","The CEO should have bought a cheaper system.","Training is only needed for back office systems."],answer:1,
+ explain:"MIS is a tool that leverages people's talents. Without people who know how to use it, even the best system won't drive success."},
+{id:"v2q24",topic:"Front office vs. back office",type:"mc",
+ prompt:"What actually decides whether a process is customer facing?",
+ options:["Whether the customer can watch it happen","Whether a computer does it","Whether it directly serves the customer and they experience its result","Whether it involves money"],answer:2,
+ explain:"\"Can the customer watch it?\" is the rule that tripped you up. A loan review or claim review happens out of sight, but the customer experiences the result directly, so it's front office. Money doesn't decide it either: billing is front office and accounts receivable is back office."}
+];
+
+
+(function shuffleQ2(){
+  let seed = 20261003;
+  const rnd = ()=>{ seed = (seed*1103515245 + 12345) % 2147483648; return seed/2147483648; };
+  Q2.forEach(q=>{
+    if(q.type!=="mc") return;
+    const idx = q.options.map((_,i)=>i);
+    for(let i=idx.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+    q.options = idx.map(i=>q.options[i]);
+    q.answer = idx.indexOf(q.answer);
+  });
+})();
+
+const Q3 = [
+{id:"v3q1",topic:"Four key drivers",type:"twopart",
+ prompt:"A clothing store's sales report shows hoodies were its top seller in October.",
+ parts:[
+  {q:"Part A: Which driver is this?",options:["Data","Information","Business intelligence","Knowledge"],answer:1},
+  {q:"Part B: Why?",options:["It comes from one source and answers one business question","Nobody has used it to make a decision or take action yet","It shows a trend the business can use to plan its next order","It was pulled from the store's sales system, which makes it organized"],answer:0}],
+ explain:"One source (sales) answering one question (what sold most?) is information. \"Nobody has acted on it yet\" is the trap you fell for on Quiz 2. Not acting only rules out knowledge; it doesn't tell you whether something is information or BI. What separates those two is how many sources got combined."},
+{id:"v3q2",topic:"Front office vs. back office",type:"mc",
+ prompt:"Which process breaks the rule \"If the customer can't see it happening, it's back office\"?",
+ options:["Loan processing","Tracking employee vacation time","Accounts receivable","Production schedules"],answer:0,
+ explain:"The customer can't watch their loan being reviewed, but loan processing is still front office because it directly serves them and they experience the result. The other three really are back office, so they follow the rule instead of breaking it. To break a rule, an example has to be hidden AND customer facing."},
+{id:"v3q3",topic:"Security and threats",type:"twopart",
+ prompt:"Your roommate downloads a \"free Spotify Premium\" app. It works, but it secretly lets someone steal his passwords.",
+ parts:[
+  {q:"Part A: What is it?",options:["Virus","Worm","Trojan horse","Ransomware"],answer:2},
+  {q:"Part B: What gives it away?",options:["It pretended to be something useful so he'd install it","It only caused harm after he chose to download and open it himself","It quietly stole his data in the background without him noticing","It moved onto his other devices and accounts on its own"],answer:0}],
+ explain:"The disguise is what makes it a Trojan horse. \"It needed him to do something\" is the trap: viruses need you to open something too, so that clue doesn't separate them. Hook: Trojan = disguise, virus = infects files, worm = spreads alone."},
+{id:"v3q4",topic:"Data vs. information",type:"twopart",
+ prompt:"A record reads: \"Customer #4471, $89.99, 10/02/2026, Store 12.\"",
+ parts:[
+  {q:"Part A: Is this data or information?",options:["Data","Information"],answer:0},
+  {q:"Part B: Why?",options:["It's raw recorded facts that don't answer any business question yet","It has a date and store number, which gives it context","It contains a dollar amount, which tells you how much was spent","It focuses on one specific customer, so it has a clear purpose"],answer:0},],
+ explain:"Lots of detail isn't the same as meaning. A date and store number are just more raw facts. It becomes information when it's processed to answer something, like \"Which store had the biggest sales day?\""},
+{id:"v3q5",topic:"Systems thinking and feedback",type:"twopart",
+ prompt:"A university adds 300 parking spots, but traffic near campus gets worse because the new lot's only entrance is on an already jammed street.",
+ parts:[
+  {q:"Part A: What concept would have caught this before it was built?",options:["Systems thinking","Efficiency","Feedback loop","Effectiveness"],answer:0},
+  {q:"Part B: Why isn't efficiency the answer?",options:["Efficiency measures how well resources are used; the mistake was ignoring how the lot connects to everything around it","Efficiency only measures how well people work, not how well buildings or lots work","Efficiency and systems thinking mean the same thing, so either answer would work","The lot used its space well, so by definition the project was efficient"],answer:0}],
+ explain:"Same lesson as the grocery store. When a fix to one part fails because of how it connects to other parts, the concept is systems thinking. Efficiency might describe the result, but it's not the way of looking that would have caught the problem."},
+{id:"v3q6",topic:"Generic strategies",type:"match",
+ prompt:"Match each airline to its strategy, based on the study guide.",
+ items:[
+  {t:"Horizon Air",a:"Cost leadership"},
+  {t:"British Airways",a:"Differentiation"},
+  {t:"Frontier",a:"Cost leadership"},
+  {t:"JetBlue",a:"Cost leadership"},
+  {t:"Sky Taxi",a:"Focused strategy"}],
+ choices:["Cost leadership","Differentiation","Focused strategy"],
+ explain:"From the guide: cost leadership = Southwest, Horizon, Frontier, JetBlue. Differentiation = British Airways, Singapore Airlines, Virgin Atlantic. Focused = Sky Taxi. Hook for differentiation: the three with a country or famous brand in the name (British, Singapore, Virgin)."},
+{id:"v3q7",topic:"Departments and their data",type:"match",
+ prompt:"Match each piece of data to the department that owns it.",
+ items:[
+  {t:"Customer contact info and purchase history",a:"Sales"},
+  {t:"Email campaign open rates",a:"Marketing"},
+  {t:"Employee performance reviews",a:"Human resources"},
+  {t:"Monthly financial statements",a:"Finance"},
+  {t:"Quality control results",a:"Operations management"},
+  {t:"Demand forecasts",a:"Operations management"}],
+ choices:["Finance","Human resources","Sales","Marketing","Operations management"],
+ explain:"Customer data belongs to Sales; you put it under Operations on Quiz 2. Demand forecasts are the sneaky one: they sound like Sales or Marketing, but your guide lists them under Operations, because Operations uses them to plan how much to make."},
+{id:"v3q8",topic:"Four key drivers",type:"mc",
+ prompt:"A report says \"Hoodies were our top seller in October.\" What would have to be added to turn it into business intelligence?",
+ options:["The exact number of hoodies sold each day, broken down by size and color","The manager deciding to order more hoodies","Combining it with weather, competitor pricing, and campus event data to find what drives hoodie sales","Sharing the report with every manager so the whole team can discuss it"],answer:2,
+ explain:"BI pulls in information from multiple sources (customers, competitors, partners, the industry) to find patterns and trends. More detail from the same source is still information. The manager's decision is knowledge, which skips past BI."},
+{id:"v3q9",topic:"Porter's Five Forces",type:"match",
+ prompt:"You run Red Bull. Match each situation to the force it represents for YOUR company.",
+ items:[
+  {t:"A brand new energy drink company launches",a:"Threat of new entrants"},
+  {t:"Gym goers switch to black coffee for their caffeine",a:"Threat of substitutes"},
+  {t:"Walmart demands a lower price per case",a:"Buyer power"},
+  {t:"The only aluminum can maker raises its prices",a:"Supplier power"},
+  {t:"Monster cuts its prices to steal your customers",a:"Rivalry among existing competitors"}],
+ choices:["Buyer power","Supplier power","Threat of new entrants","Threat of substitutes","Rivalry among existing competitors"],
+ explain:"New company, same product = new entrant. Different product, same need = substitute. A competitor that already exists fighting harder = rivalry. Monster isn't new, so it's rivalry, not a new entrant."},
+{id:"v3q10",topic:"Metrics",type:"match",
+ prompt:"Place each company in the efficiency and effectiveness grid.",
+ items:[
+  {t:"A delivery company uses the shortest routes and every package arrives on time",a:"High efficiency, high effectiveness"},
+  {t:"A team spends triple its budget but hits every goal",a:"Low efficiency, high effectiveness"},
+  {t:"A factory produces cheaply, but half the products are defective",a:"High efficiency, low effectiveness"},
+  {t:"A project runs over budget and still misses its goals",a:"Low efficiency, low effectiveness"}],
+ choices:["High efficiency, high effectiveness","High efficiency, low effectiveness","Low efficiency, high effectiveness","Low efficiency, low effectiveness"],
+ explain:"Efficiency = how well you use resources (money, time, people). Effectiveness = whether you reach the goal. Ask two separate questions: \"Did they waste resources?\" and \"Did they get the result?\""},
+{id:"v3q11",topic:"Role of MIS",type:"mc",
+ prompt:"Which statement would your professor most likely mark WRONG?",
+ options:["MIS is a valuable tool for businesses","MIS leverages the talents of the people who use it","MIS can help drive innovation","Once installed, an MIS creates business success on its own"],answer:3,
+ explain:"The guide's whole point is that MIS works through people who know how to manage and use it. Saying it creates success on its own leaves out the people."},
+{id:"v3q12",topic:"Executive roles",type:"match",
+ prompt:"Match each task to the executive responsible.",
+ items:[
+  {t:"Decides which of five tech projects best supports the company's long term plan",a:"CIO"},
+  {t:"Figures out why the website crashes every Monday morning",a:"CTO"},
+  {t:"Sets rules for how long customer data is kept and who may see it",a:"CPO"},
+  {t:"Runs fake phishing tests to see which employees click",a:"CSO"}],
+ choices:["CIO","CTO","CSO","CPO"],
+ explain:"CIO = does tech match business goals. CTO = does tech work (speed, accuracy, reliability). CSO = keeps attackers out. CPO = decides what the company itself may do with personal data."},
+{id:"v3q13",topic:"Generic strategies",type:"twopart",
+ prompt:"A barber shop serves only Howard students and charges $10 a cut.",
+ parts:[
+  {q:"Part A: Which strategy is this?",options:["Cost leadership","Differentiation","Focused strategy"],answer:2},
+  {q:"Part B: Why?",options:["It targets a narrow niche, and market size is what decides focused vs. broad","Its prices are the lowest around, and cost leadership means competing on price","Being built around Howard makes it unique, and standing out is differentiation","Small local businesses like barber shops are always considered focused"],answer:0}],
+ explain:"A cheap price pulls you toward cost leadership, but cost leadership in the guide means a BROAD market. Once the market is a narrow niche, it's a focused strategy, whether that niche is served cheaply or with luxury."},
+{id:"v3q14",topic:"Data vs. information",type:"multi",
+ prompt:"Which actions turn data into information? Select all that apply.",
+ options:["Totaling sales by store to find the weakest location","Comparing this month's returns to last month's","Copying the spreadsheet to a backup drive","Sorting customers by total spend to find the top ten","Converting the file from CSV to Excel format"],
+ answers:[0,1,3],
+ explain:"Processing that answers a question (which store is weakest? are returns going up? who are the top customers?) creates information. Copying or converting a file changes where or how data is stored, not what it means."},
+{id:"v3q15",topic:"Security and threats",type:"match",
+ prompt:"Match each situation to the right term.",
+ items:[
+  {t:"Came disguised as a free mod for a video game",a:"Trojan horse"},
+  {t:"Spread through the dorm WiFi to every laptop without anyone clicking anything",a:"Worm"},
+  {t:"Hid inside a shared Word document and infected each computer that opened it",a:"Virus"},
+  {t:"A security firm hired to break into the school's network to find weak spots",a:"White hat hacker"},
+  {t:"Someone breaks into the registrar's system to change grades",a:"Black hat hacker"}],
+ choices:["Virus","Worm","Trojan horse","Script kiddie","White hat hacker","Black hat hacker","Ransomware like Simplelocker"],
+ explain:"Trojan = disguise. Virus = rides inside files and spreads when they're opened. Worm = spreads alone. White hat = permission and good intent. Black hat = no permission, harmful intent."},
+{id:"v3q16",topic:"Systems thinking and feedback",type:"mc",
+ prompt:"Which of these is a feedback loop, not just output?",
+ options:["A restaurant prints a daily sales report","A restaurant prints a daily sales report, and the chef drops the dish nobody ordered from tomorrow's menu","A restaurant tracks every order through the kitchen and records how long each dish took","Customers finish their meals, pay, and the receipts are stored in the system"],answer:1,
+ explain:"A report on its own is output. It becomes feedback when that output information loops back and changes what happens next."},
+{id:"v3q17",topic:"Porter's Five Forces",type:"mc",
+ prompt:"A company's only supplier keeps raising prices. According to the study guide, how can the company use MIS to weaken that supplier power?",
+ options:["Use MIS to find or create alternative products and suppliers","Use MIS to raise prices on its own customers","Use MIS to block new competitors from entering","Use MIS to cut employee hours to cover the cost"],answer:0,
+ explain:"Supplier power is strong when you have nowhere else to go. MIS weakens it by helping you find or create alternatives, so the supplier loses its leverage."},
+{id:"v3q18",topic:"Value chain",type:"mc",
+ prompt:"Which statement about the value chain approach is FALSE?",
+ options:["Firms can enhance high value activities","Firms can eliminate low value activities","Firms can combine enhancing and eliminating","Firms should only cut low value activities and never invest in high value ones"],answer:3,
+ explain:"The approach allows all three moves: enhance high value, improve or eliminate low value, or combine them. Saying firms should only cut ignores the enhance half."},
+{id:"v3q19",topic:"Generic strategies",type:"mc",
+ prompt:"Netflix recommends shows based on what you've already watched. In the study guide's terms, this is:",
+ options:["Product differentiation using customer data","Cost leadership","Threat of substitutes","Supplier power"],answer:0,
+ explain:"Same idea as the guide's Amazon example: using customer data to tailor what each person sees makes the product stand out from competitors."},
+{id:"v3q20",topic:"Departments and their data",type:"mc",
+ prompt:"Marketing launches a huge promotion for a sneaker, but nobody told Operations, and the sneaker sells out on day one. Which idea from the study guide does this show?",
+ options:["Departments rely on each other's data, so they can't work in isolation","Threat of substitutes, since shoppers can switch to another sneaker brand","The promotion was business facing instead of customer facing","Low efficiency but high effectiveness, since the product sold out but resources were wasted"],answer:0,
+ explain:"Marketing needed Operations' inventory and demand forecast data before planning the promotion. That's interdepartmental reliance: no department can make good decisions using only its own data."},
+{id:"v3q21",topic:"Four key drivers",type:"mc",
+ prompt:"Three of these are business intelligence. Which one is NOT?",
+ options:["A grocery chain combines supplier delivery data with competitor prices to spot the best time to stock up","An airline links weather, booking, and partner data to predict delays","A store manager's report listing yesterday's total sales","A bank analyzes customer, industry, and competitor data to find which customers may leave"],answer:2,
+ explain:"The other three each combine several sources to spot a pattern. Yesterday's sales total comes from one source and answers one question, so it's information."},
+{id:"v3q22",topic:"Front office vs. back office",type:"match",
+ prompt:"Sort each process into customer facing (front office) or business facing (back office).",
+ items:[
+  {t:"Processing a customer's return",a:"Customer facing"},
+  {t:"Running payroll",a:"Business facing"},
+  {t:"Answering a customer service call",a:"Customer facing"},
+  {t:"Reordering inventory from suppliers",a:"Business facing"},
+  {t:"Hotel check in",a:"Customer facing"},
+  {t:"Onboarding a new employee",a:"Business facing"}],
+ choices:["Customer facing","Business facing"],
+ explain:"Ask: does this directly serve the customer, so they experience the result? Returns, service calls, and check in do. Payroll, reordering stock, and onboarding keep the business running behind the scenes."},
+{id:"v3q23",topic:"Executive roles",type:"mc",
+ prompt:"The CEO asks, \"Is our technology actually helping us hit our business goals?\" Who should answer?",
+ options:["Chief Information Officer","Chief Technology Officer","Chief Security Officer","Chief Automation Officer"],answer:0,
+ explain:"Linking tech to business goals is alignment, which is the CIO's job. The CTO is the tempting answer since the question says \"technology,\" but the CTO focuses on whether the tech runs fast, accurately, and reliably."},
+{id:"v3q24",topic:"Metrics",type:"mc",
+ prompt:"Which of these is a KPI rather than a CSF?",
+ options:["Keep customers happy","Be the most reliable airline","Achieve a 92% on time arrival rate","Grow the brand"],answer:2,
+ explain:"A KPI is a number that measures progress. The other three are goals the company must get right (CSFs), but you can't measure any of them without attaching a number."}
+];
+
+(function shuffleQ3(){
+  let seed = 4041977;
+  const rnd = ()=>{ seed = (seed*1103515245 + 12345) % 2147483648; return seed/2147483648; };
+  const mix = (opts, ans)=>{
+    const idx = opts.map((_,i)=>i);
+    for(let i=idx.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+    return [idx.map(i=>opts[i]), idx.indexOf(ans)];
+  };
+  Q3.forEach(q=>{
+    if(q.type==="mc"){ [q.options,q.answer]=mix(q.options,q.answer); }
+    if(q.type==="twopart"){ q.parts.forEach(p=>{ if(p.options.length>2){ [p.options,p.answer]=mix(p.options,p.answer); } }); }
+  });
+})();
+
+const Q4 = [
+{id:"v4q1",topic:"Front office vs. back office",type:"twopart",
+ prompt:"A pharmacy fills your prescription in a back room where you can't see it happening.",
+ parts:[
+  {q:"Part A: Is this customer facing or business facing?",options:["Customer facing","Business facing"],answer:0},
+  {q:"Part B: Why?",options:["Your specific request is moving through it, and you'd notice right away if it were slow or wrong","It happens in a back room out of the customer's view, so it's handled behind the scenes","Prescriptions eventually help customers stay healthy, which is the goal of the whole business","Anything involving medicine is heavily regulated, which automatically makes it customer facing"],answer:0}],
+ explain:"Follow the customer's request: your prescription is your request moving through the process, so it's front office even though it happens behind a wall. \"Eventually helps customers\" is the trap reason, since nearly every back office process does that too."},
+{id:"v4q2",topic:"Executive roles",type:"twopart",
+ prompt:"A hospital's patient portal keeps freezing whenever too many people log in at once.",
+ parts:[
+  {q:"Part A: Whose problem is this?",options:["CTO","CIO","CSO","CPO"],answer:0},
+  {q:"Part B: Why?",options:["The issue is whether the technology runs fast and reliably","The portal holds patient information, and information is the CIO's area","Patient records are involved, so privacy rules come into play","A system freezing under heavy traffic could be a sign of an attack"],answer:0}],
+ explain:"Speed, accuracy, and reliability are the CTO's job. The word \"information\" in CIO is a trap: the CIO is about whether tech lines up with business goals, not about anything that touches information. Hook: CTO keeps the tech on; CIO keeps it in line with the business."},
+{id:"v4q3",topic:"Four key drivers",type:"twopart",
+ prompt:"A coffee chain's app shows that its Georgia Ave location sold the most oat milk lattes in September.",
+ parts:[
+  {q:"Part A: Which driver is this?",options:["Data","Information","Business intelligence","Knowledge"],answer:1},
+  {q:"Part B: Why?",options:["It comes from one source and answers one business question","It names a specific location and month, which gives it real business meaning","Nobody has used it to change anything at the store yet","It came out of the app's database already sorted and organized"],answer:0}],
+ explain:"One source (the app's sales) answering one question (which store sold the most?) is information. To be BI, it would need to combine several sources, like weather, foot traffic, or competitor data, to find a pattern. Being organized or specific doesn't change that."},
+{id:"v4q4",topic:"Generic strategies",type:"match",
+ prompt:"Match each airline to its strategy, based on the study guide.",
+ items:[
+  {t:"Southwest",a:"Cost leadership"},
+  {t:"Singapore Airlines",a:"Differentiation"},
+  {t:"Horizon Air",a:"Cost leadership"},
+  {t:"Virgin Atlantic",a:"Differentiation"},
+  {t:"Frontier",a:"Cost leadership"},
+  {t:"Sky Taxi",a:"Focused strategy"}],
+ choices:["Cost leadership","Differentiation","Focused strategy"],
+ explain:"Cost leadership: Southwest, Horizon, Frontier, JetBlue. Differentiation: British Airways, Singapore, Virgin Atlantic (the country or famous brand names). Focused: Sky Taxi. Go by the guide's lists, not what you know about real routes."},
+{id:"v4q5",topic:"Data vs. information",type:"multi",
+ prompt:"Which actions turn data into information? Select all that apply.",
+ options:["Calculating the average rating for each menu item","Comparing this semester's enrollment to last fall's","Ranking dorms by number of maintenance requests","Emailing the raw spreadsheet to a coworker","Adding a password to the file","Finding which day of the week has the most late deliveries"],
+ answers:[0,1,2,5],
+ explain:"Averaging, comparing, ranking, and finding the busiest day all process data so it answers a question. Sending a file or locking it changes who can see the data, not what it means. Comparing counts because it answers a question like \"are we going up or down?\""},
+{id:"v4q6",topic:"Systems thinking and feedback",type:"match",
+ prompt:"Match each situation to the concept it best shows.",
+ items:[
+  {t:"A school changes its bus schedule after surveys show students keep arriving late",a:"Feedback loop"},
+  {t:"Before building a stadium, a city studies how it will affect traffic, parking, and nearby businesses",a:"Systems thinking"},
+  {t:"A warehouse packs the same number of orders with fewer workers",a:"Efficiency"},
+  {t:"A charity reaches its goal of feeding 1,000 families",a:"Effectiveness"}],
+ choices:["Systems thinking","Feedback loop","Efficiency","Effectiveness"],
+ explain:"Feedback = using results to change what happens next. Systems thinking = looking at how all the parts connect. Efficiency = doing more with fewer resources. Effectiveness = reaching the goal."},
+{id:"v4q7",topic:"Executive roles",type:"mc",
+ prompt:"The company can afford either a new customer relationship system or a new website next year, and only one fits its growth plan. Who should make the call?",
+ options:["Chief Information Officer","Chief Technology Officer","Chief Automation Officer","Chief User Experience Officer"],answer:0,
+ explain:"Choosing which tech investment fits the business plan is alignment, which is the CIO's job. The CTO would make sure whichever system is chosen runs fast and reliably."},
+{id:"v4q8",topic:"Porter's Five Forces",type:"twopart",
+ prompt:"Apple buys chips from TSMC and sells iPhones to Verizon. Apple pushes TSMC for lower chip prices.",
+ parts:[
+  {q:"Part A: From TSMC's point of view, this is:",options:["Buyer power","Supplier power","Rivalry among existing competitors","Threat of substitutes"],answer:0},
+  {q:"Part B: Why?",options:["Apple buys from TSMC, so to TSMC, Apple is a buyer","Apple supplies iPhones to Verizon, which makes Apple a supplier in the chain","Apple and TSMC both make tech products, so they compete with each other","Apple could switch to another chip maker, which counts as a substitute"],answer:0}],
+ explain:"Stand where the question puts you. TSMC sells to Apple, so Apple is TSMC's buyer, and it doesn't matter that Apple supplies Verizon further down the line. Switching chip makers would still be buyer power, not a substitute, because it's the same product from a different seller."},
+{id:"v4q9",topic:"Departments and their data",type:"match",
+ prompt:"Match each piece of data to the department that owns it.",
+ items:[
+  {t:"Ad spending per new customer",a:"Marketing"},
+  {t:"Each sales rep's commission",a:"Sales"},
+  {t:"Inventory counts",a:"Operations management"},
+  {t:"Hiring and turnover rates",a:"Human resources"},
+  {t:"Cash flow projections",a:"Finance"},
+  {t:"Which customers bought something in the last 30 days",a:"Sales"}],
+ choices:["Finance","Human resources","Sales","Marketing","Operations management"],
+ explain:"Customer acquisition costs belong to Marketing. Commission and customer purchase data belong to Sales. Inventory is Operations, staffing is HR, and cash flow is Finance."},
+{id:"v4q10",topic:"Front office vs. back office",type:"match",
+ prompt:"Sort each process into customer facing (front office) or business facing (back office).",
+ items:[
+  {t:"Processing a hotel guest's room service order",a:"Customer facing"},
+  {t:"Scheduling housekeeping staff shifts",a:"Business facing"},
+  {t:"Approving a customer's refund",a:"Customer facing"},
+  {t:"Paying the electric bill for the warehouse",a:"Business facing"},
+  {t:"Shipping a customer's online order",a:"Customer facing"},
+  {t:"Updating the employee handbook",a:"Business facing"},
+  {t:"Sending a customer their invoice",a:"Customer facing"},
+  {t:"Accounts payable",a:"Business facing"}],
+ choices:["Customer facing","Business facing"],
+ explain:"Room service, refunds, shipping, and invoices each move a specific customer's request forward. Staff schedules, the company's own bills, the handbook, and accounts payable are the company handling its own affairs."},
+{id:"v4q11",topic:"Role of MIS",type:"mc",
+ prompt:"A classmate says MIS is really just the IT department's job. Which response best matches the study guide?",
+ options:["Every department relies on information, and MIS is a tool that helps people across the business use it to make better decisions","He's right, since only IT staff know how to manage and run the company's systems","He's right, because MIS is mainly about protecting company data from hackers","MIS belongs to the executives, so other departments don't need to understand it"],answer:0,
+ explain:"MIS leverages the talents of people throughout the business, and every department depends on information. Treating it as only IT's job misses both points."},
+{id:"v4q12",topic:"Metrics",type:"twopart",
+ prompt:"Howard's athletics department wants to \"build a winning basketball program\" and tracks \"win percentage this season.\"",
+ parts:[
+  {q:"Part A: Which one is the KPI?",options:["Win percentage this season","Build a winning basketball program"],answer:0},
+  {q:"Part B: Why?",options:["It's a number that measures progress toward the goal","It's limited to this season, and KPIs are always short term goals","It's the bigger goal the department has to get right to succeed","It's more specific than the other one, so it must be the KPI"],answer:0}],
+ explain:"A KPI is a measurable number. \"Build a winning program\" is the CSF, the thing they must get right. Short term or specific isn't the test; the test is whether you can put a number on it."},
+{id:"v4q13",topic:"Generic strategies",type:"twopart",
+ prompt:"Walmart sells low priced products to almost everyone in the country.",
+ parts:[
+  {q:"Part A: Which strategy is this?",options:["Cost leadership","Differentiation","Focused strategy"],answer:0},
+  {q:"Part B: Why?",options:["It competes mainly on low prices across a broad market","It targets one type of shopper, budget shoppers, which makes it a niche","Its prices are low, and low prices alone are enough to be cost leadership even in a niche","It's the biggest retailer in the country, and being the biggest sets it apart"],answer:0}],
+ explain:"Cost leadership needs both pieces: low prices AND a broad market. Budget shoppers aren't a niche when they're most of the country. A cheap business serving a tiny niche, like a barber shop serving only Howard students, would be focused instead."},
+{id:"v4q14",topic:"Generic strategies",type:"mc",
+ prompt:"Blockbuster dominated movie rentals but didn't change its strategy when streaming arrived, and it went out of business. In study guide terms, what was its mistake?",
+ options:["It treated its competitive advantage as permanent instead of continuously updating its strategy","It picked cost leadership when it should have picked differentiation","It ignored the buyer power of the movie studios that sold it films","It focused too much on its back office processes"],answer:0,
+ explain:"Companies continuously update strategy because their environments change rapidly. Blockbuster's advantage disappeared when the environment changed and it didn't adapt."},
+{id:"v4q15",topic:"Four key drivers",type:"mc",
+ prompt:"Three of these are knowledge. Which one is NOT?",
+ options:["A manager adds staff on Fridays after seeing the BI dashboard","A veteran baker can tell by smell when the bread is ready","A dashboard combining sales, weather, and event data that shows Friday rushes","A buyer decides not to restock a product after reading the sales report"],answer:2,
+ explain:"The dashboard is BI: several sources combined into a pattern. The other three are people applying judgment or experience to act, which is knowledge."},
+{id:"v4q16",topic:"Value chain",type:"match",
+ prompt:"A company maps its value chain. Match each finding to the move that fits best.",
+ items:[
+  {t:"Customer support drives most repeat sales",a:"Enhance it"},
+  {t:"Invoicing is required, but it's slow and customers complain about it",a:"Improve it"},
+  {t:"A weekly report nobody reads eats 10 hours of staff time",a:"Eliminate it"}],
+ choices:["Enhance it","Improve it","Eliminate it"],
+ explain:"High value activities get enhanced. Low value activities get improved if the business still needs them, or eliminated if it doesn't."},
+{id:"v4q17",topic:"Executive roles",type:"match",
+ prompt:"Match each task to the executive responsible.",
+ items:[
+  {t:"Checks whether the tech budget is going to projects that support company goals",a:"CIO"},
+  {t:"Keeps the servers fast and the data accurate",a:"CTO"},
+  {t:"Leads the response when ransomware locks company files",a:"CSO"},
+  {t:"Makes sure customer data is used legally and ethically",a:"CPO"},
+  {t:"Decides which tasks robots can take over",a:"CAO"},
+  {t:"Makes the company's app easier and more enjoyable to use",a:"CUXO"}],
+ choices:["CIO","CTO","CSO","CPO","CAO","CUXO"],
+ explain:"CIO = in line with goals. CTO = tech works. CSO = security. CPO = privacy and ethical data use. CAO = automation. CUXO = user experience."},
+{id:"v4q18",topic:"Data vs. information",type:"twopart",
+ prompt:"A spreadsheet has 50,000 rows logging every swipe into campus dining halls.",
+ parts:[
+  {q:"Part A: Is this data or information?",options:["Data","Information"],answer:0},
+  {q:"Part B: Why?",options:["Even though it's large and organized, it doesn't answer a business question yet","It's organized into rows and columns, which gives it structure and meaning","50,000 rows is enough for patterns to show up on their own","It's tied to real students and dining halls, which gives it context"],answer:0}],
+ explain:"Size and neat rows don't create meaning. It becomes information when it's processed to answer something, like \"Which dining hall is busiest at noon?\""},
+{id:"v4q19",topic:"Porter's Five Forces",type:"mc",
+ prompt:"For Uber, which of these is a threat of SUBSTITUTES rather than new entrants?",
+ options:["More students start riding Capital Bikeshare instead of ordering rides","A new rideshare app launches in DC","Lyft cuts its prices to win riders","Drivers demand higher pay per trip"],answer:0,
+ explain:"Bikeshare meets the same need (getting around) in a different way, so it's a substitute. A new rideshare app is a new entrant, Lyft is rivalry, and drivers pushing for pay is supplier power since they supply the labor."},
+{id:"v4q20",topic:"Systems thinking and feedback",type:"twopart",
+ prompt:"A dining hall adds a second register. The manager tracks line times for a week, sees the line still backs up at the food stations, and moves a worker from the register to food refills.",
+ parts:[
+  {q:"Part A: What is the manager using?",options:["A feedback loop","Efficiency","Cost leadership","Buyer power"],answer:0},
+  {q:"Part B: Why?",options:["The line time results are being used to adjust what happens next","Line times measure how quickly resources are used, which is efficiency","Moving the worker saves money, which lowers the dining hall's costs","Students waiting in line hold power over how the dining hall operates"],answer:0}],
+ explain:"Output (line times) looped back to change the next action (where the worker goes). That loop is feedback. Measuring line times alone would just be output."},
+{id:"v4q21",topic:"Metrics",type:"twopart",
+ prompt:"Company A has $20 million in sales in a $400 million industry. Company B has $9 million in sales in a $90 million industry.",
+ parts:[
+  {q:"Part A: Which has the larger market share?",options:["Company A","Company B","They're equal"],answer:1},
+  {q:"Part B: Why?",options:["Market share compares a firm's sales to its own industry's total, not to other companies","Company A has more total sales, so it controls more of the market","Company B is in a smaller industry, and smaller industries always give bigger shares","Market share is sales divided by profit, so the more profitable firm wins"],answer:0}],
+ explain:"A: $20M ÷ $400M = 5%. B: $9M ÷ $90M = 10%. Company B sells less but owns twice as much of its own market."},
+{id:"v4q22",topic:"Security and threats",type:"match",
+ prompt:"Match each situation to the right term.",
+ items:[
+  {t:"A hacker hired by the bank to test its defenses",a:"White hat hacker"},
+  {t:"Someone runs an attack tool from the internet without understanding how it works",a:"Script kiddie"},
+  {t:"Company files get locked and a message demands payment",a:"Ransomware like Simplelocker"},
+  {t:"A \"free textbook PDF\" download that secretly installs spyware",a:"Trojan horse"},
+  {t:"Malicious code spreads through the office network without anyone opening anything",a:"Worm"}],
+ choices:["Virus","Worm","Trojan horse","Script kiddie","White hat hacker","Black hat hacker","Ransomware like Simplelocker"],
+ explain:"Trojan = disguise. Worm = spreads alone. Virus = infects files and spreads when they're opened. Script kiddies use ready made tools without real skill."},
+{id:"v4q23",topic:"Front office vs. back office",type:"mc",
+ prompt:"Which process is business facing, even though customers eventually benefit from it?",
+ options:["Training new cashiers","Processing a customer's return","Answering a customer's support ticket","Delivering a customer's package"],answer:0,
+ explain:"Better trained cashiers help customers someday, but no specific customer's request is moving through the training. The other three each handle one customer's request right now."},
+{id:"v4q24",topic:"Departments and their data",type:"mc",
+ prompt:"Finance is building next year's budget. Which data does it most need from Sales to make the budget realistic?",
+ options:["Sales reports showing expected revenue","Employee performance reviews","Quality control results","Email campaign open rates"],answer:0,
+ explain:"A budget depends on how much money is expected to come in, and that comes from Sales reports. This is interdepartmental reliance: Finance can't plan well using only its own data."}
+];
+
+const GAPS = {
+v4q4:{id:"v4g2",topic:"Porter's Five Forces",type:"mc",
+ prompt:"An investor is deciding whether to start a company in the meal kit industry. Why would she use Porter's Five Forces?",
+ options:["To assess how attractive the industry is and how intense its competition is","To decide which executive should be in charge of the new company","To measure whether the company is both efficient and effective","To sort the company's processes into front office and back office"],answer:0,
+ explain:"The Five Forces model is a tool for judging an industry as a whole: is it attractive to enter, and how fierce is the competition? The other options belong to other topics."},
+v4q8:{id:"v4g5",topic:"Porter's Five Forces",type:"twopart",
+ prompt:"Think about how much power a supplier has.",
+ parts:[
+  {q:"Part A: In which situation is supplier power HIGHEST?",options:["A restaurant buys a special sauce that only one company in the world makes","A restaurant buys napkins, which dozens of companies sell","A grocery store can choose among hundreds of farms for its apples","A school buys printer paper from whichever office store is cheapest"],answer:0},
+  {q:"Part B: What can a powerful supplier do, according to the study guide?",options:["Charge higher prices or limit its quality and services","Demand lower prices from the companies it sells to","Copy its customers' products and sell them for less","Force its customers to merge with their competitors"],answer:0}],
+ explain:"Supplier power is high when the supplier is unique or powerful, so you have nowhere else to go. That lets it charge more or cut back on quality and service. Demanding lower prices (Part B, second option) is what powerful BUYERS do."},
+v4q12:{id:"v4g1",topic:"Systems thinking and feedback",type:"twopart",
+ prompt:"The study guide defines what a system is.",
+ parts:[
+  {q:"Part A: Which definition matches the guide?",options:["A collection of interacting parts working together for a common purpose","A single piece of technology that stores and processes company data","Any process that turns input into output, whether or not the parts interact","A group of departments that each work independently toward their own goals"],answer:0},
+  {q:"Part B: Which is the best example of a system?",options:["A dining hall where cashiers, cooks, and stock staff coordinate to serve students","A single cash register at the front of the dining hall","A spreadsheet listing every dining hall employee's schedule","The dining hall's menu posted on the wall"],answer:0}],
+ explain:"A system needs multiple parts that interact and share one purpose. A single register, a spreadsheet, or a menu is just one piece. The dining hall as a whole, with everyone working together, is the system. Systems thinking means watching all of it."},
+v4q16:{id:"v4g3",topic:"Porter's Five Forces",type:"twopart",
+ prompt:"Movie theaters are losing customers to people streaming movies at home.",
+ parts:[
+  {q:"Part A: Which force is this?",options:["Threat of substitutes","Threat of new entrants","Buyer power","Rivalry among existing competitors"],answer:0},
+  {q:"Part B: According to the study guide, how can theaters reduce it?",options:["Offer higher value, like better screens, sound, and experiences you can't get at home","Use MIS to find alternative suppliers for popcorn and film equipment","Cut prices below every streaming service so customers can't refuse","Merge with other theater chains so there are fewer competitors"],answer:0}],
+ explain:"The guide says the threat of substitutes is minimized by offering higher value, superior quality, or wider distribution. Finding alternative suppliers is how you fight supplier power, and merging targets rivalry."},
+v4q20:{id:"v4g4",topic:"Porter's Five Forces",type:"twopart",
+ prompt:"Opening an online phone case shop takes a laptop and $500. Starting a new airline takes billions of dollars, planes, and government approval.",
+ parts:[
+  {q:"Part A: Which industry faces the higher threat of new entrants?",options:["Phone cases","Airlines"],answer:0},
+  {q:"Part B: Why?",options:["Low barriers to entry let new competitors in easily, which makes the market crowded","Airlines earn more profit per customer, so more companies want to get into them","Phone cases have more substitutes, which pulls in more new companies","Airlines face stronger buyer power, which scares off new companies"],answer:0}],
+ explain:"The threat of new entrants depends on entry barriers. When it's cheap and easy to get in, lots of companies do, and the market gets crowded. High costs and approvals keep newcomers out of airlines."},
+v4q24:{id:"v4g6",topic:"Generic strategies",type:"mc",
+ prompt:"According to the study guide, what gives a firm a competitive advantage?",
+ options:["Securing a unique position in the market","Having more employees than anyone else in its industry","Spending more on technology than any competitor","Copying competitors' strategies so it never falls behind"],answer:0,
+ explain:"The guide ties competitive advantage to unique market positioning: being different in a way that's hard to copy. Copying competitors is the opposite of unique, and size or spending alone doesn't create an advantage."}
+};
+
+(function addGaps(){
+  const out=[];
+  Q4.forEach(q=>{ out.push(q); if(GAPS[q.id]) out.push(GAPS[q.id]); });
+  Q4.length=0; out.forEach(q=>Q4.push(q));
+})();
+
+(function shuffleQ4(){
+  let seed = 1004202;
+  const rnd = ()=>{ seed = (seed*1103515245 + 12345) % 2147483648; return seed/2147483648; };
+  const mix = (opts, ans)=>{
+    const idx = opts.map((_,i)=>i);
+    for(let i=idx.length-1;i>0;i--){ const j=Math.floor(rnd()*(i+1)); [idx[i],idx[j]]=[idx[j],idx[i]]; }
+    return [idx.map(i=>opts[i]), idx.indexOf(ans)];
+  };
+  Q4.forEach(q=>{
+    if(q.type==="mc"){ [q.options,q.answer]=mix(q.options,q.answer); }
+    if(q.type==="twopart"){ q.parts.forEach(p=>{ if(p.options.length>1){ [p.options,p.answer]=mix(p.options,p.answer); } }); }
+  });
+})();
+
+const TOPIC_ORDER = ["Four key drivers","Data vs. information","Departments and their data","Systems thinking and feedback","Role of MIS","Porter's Five Forces","Generic strategies","Value chain","Front office vs. back office","Executive roles","Metrics","Security and threats"];
+const QUIZZES = [
+  {id:"mis-midterm-shared-v1", name:"MIS Midterm Practice Quiz", blurb:"30 questions covering every topic on the MIS midterm study guide. Some questions have two parts: pick the answer, then pick the reason. Each part is worth half a point, so a lucky guess only gets half credit.", questions:Q4}
+];
+function quizById(id){ return QUIZZES.find(q=>q.id===id); }
+
+let QZ = QUIZZES[0];
+function QS(){ return QZ.questions; }
+
+const LS_HIST = "mis-shared-quiz-history-v1";
+function lsGet(k){ try{ const v = localStorage.getItem(k); return v ? JSON.parse(v) : null; }catch(e){ return null; } }
+function lsSet(k,v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+function progKey(id){ return "mis-quiz-progress-"+id; }
+
+function freshState(){ return {answers:{},conf:{},notes:{},time:{},flagged:[],current:0,startedAt:null}; }
+function loadState(id){ const s = lsGet(progKey(id)); return (s && s.startedAt) ? Object.assign(freshState(), s) : freshState(); }
+let S = loadState(QZ.id);
+let db = null, uid = null, view = "intro", reviewAttempt = null, history = [];
+let tick = null, qEnteredAt = null;
+
+/* ---------- grading ---------- */
+function grade(q, v){
+  if(q.type==="mc"){ return {pts: v===q.answer?1:0}; }
+  if(q.type==="multi"){
+    const a = (v||[]).slice().sort().join(","), b = q.answers.slice().sort().join(",");
+    return {pts: a===b?1:0};
+  }
+  if(q.type==="number"){
+    const n = parseFloat(String(v||"").replace(/[^0-9.\-]/g,""));
+    return {pts: (!isNaN(n) && Math.abs(n-q.answer)<=q.tol)?1:0};
+  }
+  if(q.type==="match"){
+    const got = q.items.filter((it,i)=> v && v[i]===it.a).length;
+    return {pts: got/q.items.length, got, of:q.items.length};
+  }
+  if(q.type==="twopart"){
+    const got = q.parts.filter((p,i)=> v && v[i]===p.answer).length;
+    return {pts: got/q.parts.length, got, of:q.parts.length};
+  }
+}
+function isAnswered(q){
+  const v = S.answers[q.id];
+  if(v===undefined||v===null) return false;
+  if(q.type==="multi") return v.length>0;
+  if(q.type==="number") return String(v).trim()!=="";
+  if(q.type==="match") return q.items.every((_,i)=>v[i]);
+  if(q.type==="twopart") return q.parts.every((_,i)=>v[i]!==undefined && v[i]!==null);
+  return true;
+}
+function readable(q, v){
+  if(v===undefined||v===null||(Array.isArray(v)&&!v.length)) return "(no answer)";
+  if(q.type==="mc") return q.options[v];
+  if(q.type==="multi") return v.map(i=>q.options[i]).join(" | ");
+  if(q.type==="number") return String(v)+" "+q.unit;
+  if(q.type==="match") return q.items.map((it,i)=>it.t+" → "+(v[i]||"(blank)")).join(" | ");
+  if(q.type==="twopart") return q.parts.map((p,i)=>p.q+" "+(v[i]!=null&&v[i]!==undefined?p.options[v[i]]:"(blank)")).join(" | ");
+}
+function correctText(q){
+  if(q.type==="mc") return q.options[q.answer];
+  if(q.type==="multi") return q.answers.map(i=>q.options[i]).join(" | ");
+  if(q.type==="number") return q.answer+" "+q.unit;
+  if(q.type==="match") return q.items.map(it=>it.t+" → "+it.a).join(" | ");
+  if(q.type==="twopart") return q.parts.map(p=>p.q+" "+p.options[p.answer]).join(" | ");
+}
+
+/* ---------- timing ---------- */
+function bankTime(){
+  if(qEnteredAt!==null && view==="quiz"){
+    const q = QS()[S.current];
+    S.time[q.id] = (S.time[q.id]||0) + Math.round((Date.now()-qEnteredAt)/1000);
+  }
+  qEnteredAt = Date.now();
+}
+function fmt(sec){ const m=Math.floor(sec/60), s=sec%60; return m+":"+String(s).padStart(2,"0"); }
+function startTick(){
+  stopTick();
+  tick = setInterval(()=>{
+    if(view==="quiz" && S.startedAt){ document.getElementById("timer").textContent = "Time " + fmt(Math.floor((Date.now()-S.startedAt)/1000)); }
+  },1000);
+}
+function stopTick(){ if(tick) clearInterval(tick); tick=null; }
+function persist(){ lsSet(progKey(QZ.id), S); }
+
+/* ---------- helpers ---------- */
+function el(tag, attrs, ...kids){
+  const e = document.createElement(tag);
+  if(attrs) for(const [k,v] of Object.entries(attrs)){
+    if(k==="class") e.className=v;
+    else if(k.startsWith("on")) e.addEventListener(k.slice(2), v);
+    else if(v===true) e.setAttribute(k,"");
+    else if(v!==false && v!=null) e.setAttribute(k,v);
+  }
+  for(const k of kids.flat()){ if(k==null) continue; e.append(k.nodeType?k:document.createTextNode(String(k))); }
+  return e;
+}
+const app = document.getElementById("app");
+
+/* ---------- views ---------- */
+function setMeta(){
+  document.getElementById("metaInfo").textContent =
+    view==="quiz" ? QZ.name+", "+QS().length+" questions" :
+    view==="results" && reviewAttempt ? (quizById(reviewAttempt.quizId)||{name:"Quiz"}).name+" results" : "";
+}
+function render(){
+  app.innerHTML="";
+  document.getElementById("timer").textContent="";
+  setMeta();
+  if(view==="intro") renderIntro();
+  else if(view==="quiz") renderQuiz();
+  else if(view==="results") renderResults(reviewAttempt);
+}
+
+function renderIntro(){
+  const card = el("div",{class:"card intro"},
+    el("p",{class:"prompt"},"Mark how sure you are on every question, and use the \"my thinking\" box when you're torn. After you submit, you'll see your score by topic and an explanation for every question, including why the trap answers are wrong."));
+  app.append(card);
+  QUIZZES.forEach((qz,idx)=>{
+    const st = loadState(qz.id);
+    const resume = st.startedAt && Object.keys(st.answers).length>0;
+    const taken = history.filter(a=>a.quizId===qz.id).length;
+    app.append(el("div",{class:"card",style:"margin-top:14px"},
+      el("div",{class:"qhead"}, el("span",{class:"num"}, qz.name),
+        el("span",{class:"pts"}, qz.questions.length+" questions"+(taken?", taken "+taken+"x":""))),
+      el("p",{style:"margin:0 0 6px;max-width:68ch"}, qz.blurb),
+      el("div",{class:"btnrow"}, el("span",{}),
+        el("div",{style:"display:flex;gap:10px;flex-wrap:wrap"},
+          resume ? el("button",{class:"btn ghost",onclick:()=>{ QZ=qz; S=freshState(); lsDel(progKey(qz.id)); begin(); }},"Start over") : null,
+          el("button",{class:"btn primary",onclick:()=>{ QZ=qz; S=loadState(qz.id); begin(); }}, resume?"Resume "+qz.name:"Start "+qz.name)))));
+  });
+  app.append(historyBlock());
+}
+
+function begin(){
+  if(!S.startedAt) S.startedAt = Date.now();
+  view="quiz"; qEnteredAt=Date.now(); persist(); render(); startTick();
+}
+function go(i){
+  bankTime();
+  S.current = Math.max(0, Math.min(QS().length-1, i));
+  persist(); render();
+  window.scrollTo({top:0});
+}
+function renderQuiz(){
+  const q = QS()[S.current];
+  const layout = el("div",{class:"layout"});
+  layout.append(navGrid(false), questionCard(q));
+  app.append(layout);
+  document.getElementById("timer").textContent = "Time " + fmt(Math.floor((Date.now()-S.startedAt)/1000));
+}
+
+function navGrid(graded, attempt){
+  const list = graded ? attempt.responses : QS();
+  const answeredCount = graded ? 0 : QS().filter(isAnswered).length;
+  const g = el("div",{class:"grid",role:"list"});
+  list.forEach((item,i)=>{
+    let cls = "";
+    if(graded){ cls = item.points===1?"ok":(item.points>0?"part":"bad"); }
+    else{
+      if(isAnswered(item)) cls+=" answered";
+      if(i===S.current) cls+=" current";
+      if(S.flagged.includes(item.id)) cls+=" flagged";
+    }
+    g.append(el("button",{class:cls,"aria-label":"Question "+(i+1),onclick:()=>{
+      if(graded){ const t=document.getElementById("r"+i); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); }
+      else go(i);
+    }}, i+1));
+  });
+  const aside = el("aside",{class:"nav"},
+    el("h2",{}, graded ? "Results" : answeredCount+" of "+QS().length+" answered"), g);
+  if(!graded){
+    aside.append(el("div",{class:"legend"},
+      el("div",{},el("span",{style:"background:var(--blue-soft);border-color:var(--blue)"}),"Answered"),
+      el("div",{},el("span",{style:"background:var(--red);border-color:var(--red);border-radius:50%"}),"Flagged")));
+    aside.append(el("div",{class:"navbtns"}, el("button",{class:"btn primary",onclick:askSubmit},"Submit quiz")));
+  }else{
+    aside.append(el("div",{class:"legend"},
+      el("div",{},el("span",{style:"background:var(--green-soft);border-color:var(--green)"}),"Correct"),
+      el("div",{},el("span",{style:"background:var(--amber-soft);border-color:var(--amber)"}),"Partly right"),
+      el("div",{},el("span",{style:"background:var(--red-soft);border-color:var(--red)"}),"Missed")));
+  }
+  return aside;
+}
+
+function questionCard(q){
+  const i = S.current;
+  const flagged = S.flagged.includes(q.id);
+  const card = el("section",{class:"card","aria-labelledby":"qn"});
+  card.append(el("div",{class:"qhead"},
+    el("span",{class:"num",id:"qn"},"Question "+(i+1)),
+    el("span",{class:"pts"},"1 pt")));
+  card.append(el("p",{class:"prompt"}, q.prompt));
+  const hint = {mc:"Choose one.",multi:"Select every answer that is correct.",match:"Pick an answer for each row. Choices can be used more than once.",number:"Type a number.",twopart:"Answer both parts. Each part is worth half a point."}[q.type];
+  card.append(el("p",{class:"hint"},hint));
+
+  const v = S.answers[q.id];
+  if(q.type==="mc"||q.type==="multi"){
+    const box = el("div",{class:"opts",role:q.type==="mc"?"radiogroup":"group"});
+    q.options.forEach((o,oi)=>{
+      const checked = q.type==="mc" ? v===oi : (v||[]).includes(oi);
+      const input = el("input",{type:q.type==="mc"?"radio":"checkbox",name:q.id,checked});
+      input.addEventListener("change",()=>{
+        if(q.type==="mc") S.answers[q.id]=oi;
+        else{
+          const cur = new Set(S.answers[q.id]||[]);
+          input.checked?cur.add(oi):cur.delete(oi);
+          S.answers[q.id]=[...cur].sort((a,b)=>a-b);
+        }
+        persist(); render();
+      });
+      box.append(el("label",{class:"opt"+(checked?" sel":"")}, input, el("span",{},o)));
+    });
+    card.append(box);
+  }else if(q.type==="match"){
+    const box = el("div",{class:"match"});
+    q.items.forEach((it,ii)=>{
+      const sel = el("select",{"aria-label":it.t});
+      sel.append(el("option",{value:""},"Choose..."));
+      q.choices.forEach(c=> sel.append(el("option",{value:c, selected:(v&&v[ii]===c)}, c)));
+      sel.addEventListener("change",()=>{
+        const cur = Object.assign({}, S.answers[q.id]||{});
+        cur[ii]=sel.value||undefined;
+        S.answers[q.id]=cur; persist();
+        renderNavOnly();
+      });
+      box.append(el("div",{class:"mrow"}, el("span",{},it.t), sel));
+    });
+    card.append(box);
+  }else if(q.type==="twopart"){
+    q.parts.forEach((p,pi)=>{
+      card.append(el("p",{style:"font-weight:700;margin:16px 0 4px"}, p.q));
+      const box = el("div",{class:"opts",role:"radiogroup","aria-label":p.q});
+      p.options.forEach((o,oi)=>{
+        const checked = !!v && v[pi]===oi;
+        const input = el("input",{type:"radio",name:q.id+"-"+pi,checked});
+        input.addEventListener("change",()=>{
+          const cur = Object.assign({}, S.answers[q.id]||{}); cur[pi]=oi;
+          S.answers[q.id]=cur; persist(); render();
+        });
+        box.append(el("label",{class:"opt"+(checked?" sel":"")}, input, el("span",{},o)));
+      });
+      card.append(box);
+    });
+  }else if(q.type==="number"){
+    const inp = el("input",{type:"text",class:"num",inputmode:"decimal",value:v||"","aria-label":"Your answer"});
+    inp.addEventListener("input",()=>{ S.answers[q.id]=inp.value; persist(); renderNavOnly(); });
+    card.append(el("div",{style:"display:flex;align-items:center;gap:8px;margin:12px 0"}, inp, el("span",{},q.unit)));
+  }
+
+  const extras = el("div",{class:"extras"});
+  const conf = el("div",{class:"conf"}, el("span",{class:"lbl"},"How sure are you?"));
+  [["sure","Sure"],["unsure","Somewhat"],["guess","Guessing"]].forEach(([k,lab])=>{
+    conf.append(el("button",{class:"pill","aria-pressed":S.conf[q.id]===k?"true":"false",onclick:()=>{ S.conf[q.id]=k; persist(); render(); }},lab));
+  });
+  extras.append(conf);
+  const ta = el("textarea",{id:"note-"+q.id,placeholder:"Optional. Why did you pick this, or what were you torn between?"});
+  ta.value = S.notes[q.id]||"";
+  ta.addEventListener("input",()=>{ S.notes[q.id]=ta.value; persist(); });
+  extras.append(el("div",{}, el("label",{class:"small",for:"note-"+q.id},"My thinking"), ta));
+  card.append(extras);
+
+  card.append(el("div",{class:"btnrow"},
+    el("button",{class:"btn ghost",onclick:()=>{
+      const f=new Set(S.flagged); flagged?f.delete(q.id):f.add(q.id); S.flagged=[...f]; persist(); render();
+    }}, flagged?"Remove flag":"Flag for review"),
+    el("div",{style:"display:flex;gap:10px"},
+      el("button",{class:"btn",disabled:i===0,onclick:()=>go(i-1)},"Previous"),
+      i<QS().length-1
+        ? el("button",{class:"btn primary",onclick:()=>go(i+1)},"Next")
+        : el("button",{class:"btn primary",onclick:askSubmit},"Submit quiz"))));
+  return card;
+}
+function renderNavOnly(){
+  const old = app.querySelector("aside.nav");
+  if(old) old.replaceWith(navGrid(false));
+}
+
+/* ---------- submit ---------- */
+const dlg = document.getElementById("confirmDlg");
+function askSubmit(){
+  const un = QS().map((q,i)=>isAnswered(q)?null:i+1).filter(Boolean);
+  const nc = QS().map((q,i)=>S.conf[q.id]?null:i+1).filter(Boolean);
+  const fl = QS().map((q,i)=>S.flagged.includes(q.id)?i+1:null).filter(Boolean);
+  let t = un.length ? "Unanswered: "+un.join(", ")+". " : "All questions answered. ";
+  if(nc.length) t += "No confidence marked on: "+nc.join(", ")+". ";
+  if(fl.length) t += "Flagged: "+fl.join(", ")+". ";
+  t += "You can't change answers after submitting.";
+  document.getElementById("confirmText").textContent = t;
+  if(dlg.showModal) dlg.showModal(); else if(confirm(t)) submit();
+}
+document.getElementById("cancelSubmit").onclick = ()=>dlg.close();
+document.getElementById("doSubmit").onclick = ()=>{ dlg.close(); submit(); };
+
+async function submit(){
+  bankTime(); stopTick();
+  const now = Date.now();
+  const responses = QS().map((q,i)=>{
+    const v = S.answers[q.id];
+    const g = grade(q,v);
+    return {
+      n:i+1, id:q.id, topic:q.topic, type:q.type, prompt:q.prompt,
+      yourAnswer: readable(q,v), correctAnswer: correctText(q),
+      points: Math.round(g.pts*100)/100,
+      itemsRight: g.got!==undefined ? g.got+"/"+g.of : null,
+      confidence: S.conf[q.id]||"not marked",
+      thinking: (S.notes[q.id]||"").trim(),
+      seconds: S.time[q.id]||0,
+      flagged: S.flagged.includes(q.id),
+      raw: v===undefined?null:v
+    };
+  });
+  const total = responses.reduce((s,r)=>s+r.points,0);
+  const byTopic = {};
+  TOPIC_ORDER.forEach(t=>{ if(responses.some(r=>r.topic===t)) byTopic[t]={points:0,possible:0}; });
+  responses.forEach(r=>{ byTopic[r.topic].points+=r.points; byTopic[r.topic].possible+=1; });
+  Object.values(byTopic).forEach(o=>o.points=Math.round(o.points*100)/100);
+  const attempt = {
+    quizId:QZ.id, attemptId:"a"+now, submittedAt:new Date(now).toISOString(),
+    durationSeconds: Math.round((now-S.startedAt)/1000),
+    score: Math.round(total*100)/100, possible: QS().length,
+    percent: Math.round(total/QS().length*1000)/10,
+    byTopic, responses,
+    luckyGuesses: responses.filter(r=>r.points===1 && r.confidence==="guess").map(r=>r.n),
+    confidentMisses: responses.filter(r=>r.points<1 && r.confidence==="sure").map(r=>r.n),
+    savedTo: (db && uid) ? "claude" : "device"
+  };
+  let savedRemote = false;
+  if(db && uid){
+    const ref = db.collection("data/users/"+uid).doc(attempt.attemptId);
+    try{ await ref.set(attempt); savedRemote = true; }
+    catch(e){
+      try{ await new Promise(r=>setTimeout(r,600+Math.random()*600)); await ref.set(attempt); savedRemote=true; }catch(e2){}
+    }
+  }
+  attempt.savedTo = savedRemote ? "claude" : "device";
+  const h = lsGet(LS_HIST)||[]; h.unshift(attempt); lsSet(LS_HIST, h.slice(0,20));
+  history = mergeHistory(history, [attempt]);
+  S = freshState(); lsDel(progKey(QZ.id));
+  reviewAttempt = attempt; view="results"; render(); window.scrollTo({top:0});
+}
+
+/* ---------- results ---------- */
+function renderResults(a){
+  const qz = quizById(a.quizId) || QUIZZES[1];
+  const layout = el("div",{class:"layout"});
+  layout.append(navGrid(true,a));
+  const main = el("div",{});
+  const card = el("section",{class:"card"});
+  card.append(el("div",{class:"result-hero"},
+    el("div",{class:"score"}, a.score+" / "+a.possible, el("small",{}, a.percent+"%  in "+fmt(a.durationSeconds))),
+    el("div",{},
+      el("div",{}, qz.name+", "+new Date(a.submittedAt).toLocaleString()),
+      el("div",{class:"savestate"}, a.savedTo==="claude"
+        ? "Saved. Your past attempts are listed on the start page."
+        : "Saved on this device only."))));
+
+  const cm = a.confidentMisses||[], lg = a.luckyGuesses||[];
+  card.append(el("div",{class:"callouts"},
+    el("div",{class:"callout"}, el("h3",{},"Sure, but wrong"),
+      el("p",{}, cm.length ? "Questions "+cm.join(", ")+". These are the most dangerous gaps because you won't think to review them." : "None. When you felt sure, you were right.")),
+    el("div",{class:"callout"}, el("h3",{},"Right, but guessing"),
+      el("p",{}, lg.length ? "Questions "+lg.join(", ")+". You got the point, but you don't own this yet." : "None. No lucky points this time."))));
+
+  const tb = el("table",{class:"topics"},
+    el("thead",{}, el("tr",{}, el("th",{},"Topic"), el("th",{},""), el("th",{class:"n"},"Score"))));
+  const body = el("tbody",{});
+  Object.entries(a.byTopic).forEach(([t,o])=>{
+    const pct = o.possible? o.points/o.possible*100 : 0;
+    body.append(el("tr",{}, el("td",{},t),
+      el("td",{style:"width:30%"}, el("div",{class:"bar"}, el("i",{style:"width:"+pct+"%"}))),
+      el("td",{class:"n"}, o.points+" / "+o.possible)));
+  });
+  tb.append(body); card.append(tb);
+  card.append(el("div",{class:"btnrow"},
+    el("button",{class:"btn ghost",onclick:()=>{ view="intro"; reviewAttempt=null; render(); }},"Back to start"),
+    el("button",{class:"btn primary",onclick:()=>{ QZ=qz; S=freshState(); lsDel(progKey(qz.id)); begin(); }},"Retake "+qz.name)));
+  main.append(card);
+
+  const rv = el("div",{class:"review"});
+  a.responses.forEach((r,i)=>{
+    const q = qz.questions.find(x=>x.id===r.id);
+    const cls = r.points===1?"ok":(r.points>0?"part":"bad");
+    const item = el("article",{class:"ritem "+cls,id:"r"+i},
+      el("h4",{}, el("span",{},"Question "+r.n+"  ", el("span",{class:r.points===1?"mark-ok":"mark-bad"}, r.points===1?"Correct":(r.points>0?"Partly right ("+r.itemsRight+")":"Missed"))),
+        el("span",{class:"tag"}, r.topic)),
+      el("p",{class:"rp"}, r.prompt));
+    if(q && q.type==="twopart" && r.raw){
+      q.parts.forEach((p,pi)=>{
+        const mi = r.raw[pi]; const ok = mi===p.answer;
+        item.append(el("div",{class:"ans"}, el("span",{class:ok?"mark-ok":"mark-bad"}, ok?"✓ ":"✗ "), p.q+" ",
+          el("strong",{}, mi!=null?p.options[mi]:"(blank)"), ok?"":el("span",{}, "  (correct: "+p.options[p.answer]+")")));
+      });
+    }else if(q && q.type==="match" && r.raw){
+      q.items.forEach((it,ii)=>{
+        const mine = r.raw[ii]||"(blank)"; const ok = mine===it.a;
+        item.append(el("div",{class:"ans"}, el("span",{class:ok?"mark-ok":"mark-bad"}, ok?"✓ ":"✗ "), it.t+": ",
+          el("strong",{}, mine), ok?"":el("span",{}, "  (correct: "+it.a+")")));
+      });
+    }else{
+      item.append(el("div",{class:"ans"}, el("b",{},"Your answer"), r.yourAnswer));
+      if(r.points<1) item.append(el("div",{class:"ans"}, el("b",{},"Correct"), r.correctAnswer));
+    }
+    item.append(el("div",{class:"ans",style:"color:var(--muted)"}, "Confidence: "+r.confidence+"   Time: "+fmt(r.seconds)));
+    if(r.thinking) item.append(el("div",{class:"ans",style:"color:var(--muted)"}, "Your thinking: "+r.thinking));
+    if(q) item.append(el("div",{class:"why"}, q.explain));
+    rv.append(item);
+  });
+  main.append(rv);
+  layout.append(main);
+  app.append(layout);
+}
+
+function historyBlock(){
+  const wrap = el("section",{class:"history"});
+  wrap.append(el("h2",{},"Past attempts"));
+  if(!history.length){ wrap.append(el("p",{style:"color:var(--muted)"},"No attempts yet. Your first one will show up here.")); return wrap; }
+  history.forEach(a=>{
+    const qz = quizById(a.quizId);
+    wrap.append(el("div",{class:"hrow"},
+      el("span",{}, (qz?qz.name:"Quiz")+", "+new Date(a.submittedAt).toLocaleString()),
+      el("span",{}, el("strong",{}, a.score+" / "+a.possible), "  ("+a.percent+"%)"),
+      el("button",{class:"btn ghost",onclick:()=>{ reviewAttempt=a; view="results"; render(); window.scrollTo({top:0}); }},"Review")));
+  });
+  return wrap;
+}
+function mergeHistory(a,b){
+  const m = new Map(); [...a,...b].forEach(x=>{ if(x && x.attemptId) m.set(x.attemptId,x); });
+  return [...m.values()].sort((x,y)=>y.submittedAt.localeCompare(x.submittedAt));
+}
+
+/* ---------- boot ---------- */
+history = mergeHistory([], lsGet(LS_HIST)||[]);
+render();
+
+(async ()=>{
+  try{
+    if(!window.claude || !window.claude.use) return;
+    const [d,u] = await Promise.all([window.claude.use("db"), window.claude.use("user")]);
+    if(!d || !u) return;
+    const id = await u.id();
+    if(!id) return;
+    db = d; uid = id;
+    const snap = await db.collection("data/users/"+uid).get();
+    const remote = snap.docs.map(x=>x.data()).filter(x=>x && quizById(x.quizId));
+    remote.forEach(x=>{ x.savedTo="claude"; });
+    history = mergeHistory(history, remote);
+    if(view==="intro") render();
+  }catch(e){ /* device storage only */ }
+})();
+</script>
+</body>
+</html>
